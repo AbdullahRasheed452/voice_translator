@@ -20,7 +20,7 @@ It allows you to speak into your microphone in Urdu, English, Spanish, French, G
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python, Flask, Flask-CORS
+- **Backend**: Python, Flask, Flask-CORS, Gunicorn
 - **Speech Recognition**: Web Speech API + OpenAI Whisper (`medium`)
 - **Translation Engine**: `deep-translator` (Google Translate)
 - **Audio & TTS**: `gTTS`, `playsound`, `sounddevice`, `imageio-ffmpeg`
@@ -56,12 +56,26 @@ Running `python app.py` will launch the Flask web server and automatically redir
 
 ---
 
+## ☁️ Cloud Deployment (Render.com)
+
+This app is configured for easy deployment on **Render**:
+
+1. Create a new **Web Service** on [Render.com](https://render.com) and link this repository.
+2. Set the **Start Command** to:
+   ```bash
+   gunicorn app:app
+   ```
+3. Click **Deploy** to launch your live web service!
+
+---
+
 ## 📁 Project Structure
 
 ```
 voice_translator/
 ├── app.py                      # Flask web server & real-time API routes
 ├── config.py                   # Audio configuration parameters
+├── Procfile                    # Render/Heroku production start script
 ├── requirements.txt            # Python dependencies
 ├── templates/
 │   └── index.html              # Interactive Web UI dashboard
