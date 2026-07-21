@@ -6,6 +6,9 @@ from scipy.io.wavfile import read as read_wav
 import sys
 import os
 
+# Fix Windows terminal encoding for non-Latin scripts (Hindi, Arabic, etc.)
+sys.stdout.reconfigure(encoding='utf-8')  # type: ignore
+
 # Add parent directory to path so we can import config
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from config import SAMPLE_RATE
