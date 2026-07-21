@@ -32,7 +32,7 @@ def run_pipeline():
     # TODO 2: Transcribe Audio
     # ---------------------------------------------------------
     print("\n[PIPELINE] Step 2: Transcribing...")
-    model = load_model("small")
+    model = load_model("medium")
     transcribed_text = transcribe_audio(model, temp_audio_file)
 
     # ---------------------------------------------------------
