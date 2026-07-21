@@ -1,49 +1,48 @@
-# 🎙️ VoiceFlow AI — Real-Time Voice Translator
+# 🎙️ VoiceFlow AI
 
-Hey there! 👋 This is a real-time voice translation web application built using Python, Flask, OpenAI Whisper, and Web Speech API. 
+VoiceFlow AI is a real-time voice translation web application built with Python, Flask, OpenAI Whisper, and the Web Speech API. 
 
-It lets you speak into your microphone in Urdu, English, Spanish, French, German, or Arabic, streams your spoken words **live on-screen in real-time**, translates them instantly, and speaks the translated output out loud.
+It allows you to speak into your microphone in Urdu, English, Spanish, French, German, or Arabic, stream your spoken words live on-screen in real time, translate them instantly, and listen to the translated audio output.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- ⚡ **Real-Time Live Streaming Speech Recognition**: Words appear on screen letter-by-letter as you speak (Google Translate style).
-- 🧠 **Urdu Context Prompting**: Fine-tuned context prompt for Pakistani cities (*Faisalabad, Lahore, Karachi, Islamabad*) and common greetings to prevent proper noun hallucinations.
-- 🔄 **Smart Auto-Routing**: Automatically detects Hindustani phonemes and routes them to clean Urdu script.
-- 🎨 **Electric Blue Web Dashboard**: Built with glassmorphism, animated canvas audio sound waves, instant language swapping (`Urdu ⇄ English`), copy to clipboard buttons, and spacebar shortcuts.
-- 📜 **Activity History Drawer**: Keeps track of all your recent translations with timestamps.
-- 🔊 **Voice Speech Synthesis**: Plays translated speech back in a natural female voice (`gTTS`).
-- 🤖 **Model Fine-Tuning Script**: Includes a complete PyTorch + Hugging Face script to train Whisper on custom Urdu datasets.
+- ⚡ **Real-Time Speech Recognition**: Words stream on-screen letter-by-letter as you speak.
+- 🎯 **Multi-Language Support**: Seamless translation between Urdu, English, Spanish, French, German, and Arabic.
+- 🎨 **Electric Blue Web UI**: Modern dark-mode dashboard with interactive 3D parallax tilt effects, animated soundwave visualizer, spacebar shortcuts, and language swap (`Urdu ⇄ English`).
+- 📜 **Recent Activity Drawer**: Maintains a history of your translations with timestamps.
+- 🔊 **Text-to-Speech Synthesis**: Automatically plays translated text back in natural audio using `gTTS`.
+- 🛡️ **Fail-Safe Crash Protection**: Global error handling in both Python and JavaScript to ensure maximum runtime stability.
+- 🤖 **Whisper Model Fine-Tuning**: Includes a custom training script to fine-tune Whisper models on specific datasets.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python 3.14, Flask, Flask-CORS, Gunicorn
+- **Backend**: Python, Flask, Flask-CORS, Gunicorn
 - **Speech Recognition**: Web Speech API + OpenAI Whisper (`medium`)
-- **Audio Processing**: NumPy, SciPy, SoundDevice, ImageIO-FFmpeg
-- **Translation Engine**: `deep-translator` (Google Translate API)
-- **Text-to-Speech**: `gTTS` + `playsound`
-- **Frontend**: Vanilla HTML5, CSS3 (Electric Blue Dark Mode), JavaScript (Web Speech API + Canvas Visualizer)
+- **Translation Engine**: `deep-translator` (Google Translate)
+- **Audio & TTS**: `gTTS`, `playsound`, `sounddevice`, `imageio-ffmpeg`
+- **Frontend**: HTML5, Vanilla CSS3 (Custom Design System), JavaScript
 
 ---
 
-## 🚀 Local Setup
+## 🚀 Getting Started
 
-### 1. Clone the repository
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/AbdullahRasheed452/voice_translator.git
 cd voice_translator
 ```
 
-### 2. Set up virtual environment
+### 2. Set Up Virtual Environment
 ```powershell
 py -m venv venv
 .\venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
@@ -53,29 +52,20 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open **`http://127.0.0.1:5000`** in Google Chrome or Microsoft Edge! 🎤
+Running `python app.py` will launch the Flask web server and automatically redirect you to **`http://127.0.0.1:5000`** in your browser.
 
 ---
 
-## ☁️ Cloud Deployment Options
+## ☁️ Cloud Deployment (Render.com)
 
-### Option A: 1-Click Deployment on Render.com (Recommended & Free)
-1. Sign up at [Render.com](https://render.com) and click **New +** ➔ **Web Service**.
-2. Connect your GitHub repository (`voice_translator`).
-3. Render auto-detects Python. Set the **Start Command** to:
+This app is configured for easy deployment on **Render**:
+
+1. Create a new **Web Service** on [Render.com](https://render.com) and link this repository.
+2. Set the **Start Command** to:
    ```bash
    gunicorn app:app
    ```
-4. Click **Deploy Web Service** — your app is live on a public URL!
-
-### Option B: Docker Container Deployment
-```bash
-# Build Docker image
-docker build -t voice-translator .
-
-# Run Docker container
-docker run -p 5000:5000 voice-translator
-```
+3. Click **Deploy** to launch your live web service!
 
 ---
 
@@ -83,19 +73,18 @@ docker run -p 5000:5000 voice-translator
 
 ```
 voice_translator/
-├── app.py                      # Flask web server & real-time API
-├── config.py                   # Global audio settings (16kHz, mono)
-├── Procfile                    # Production Gunicorn launch config for Render/Heroku
-├── Dockerfile                  # Container definition for cloud deployment
+├── app.py                      # Flask web server & real-time API routes
+├── config.py                   # Audio configuration parameters
+├── Procfile                    # Render/Heroku production start script
 ├── requirements.txt            # Python dependencies
 ├── templates/
-│   └── index.html              # Web Dashboard (Canvas visualizer, dark UI)
+│   └── index.html              # Interactive Web UI dashboard
 ├── src/
 │   ├── audio_capture.py        # Sounddevice microphone capture module
 │   ├── transcriber.py          # Whisper STT engine & Urdu context prompt
 │   ├── translator.py           # Multi-language translation engine
 │   ├── tts.py                  # Text-to-speech audio synthesis engine
-│   └── pipeline.py             # Standalone CLI terminal runner
+│   └── pipeline.py             # Standalone CLI pipeline runner
 └── train/
     └── fine_tune_whisper.py    # PyTorch + HuggingFace Whisper training script
 ```
