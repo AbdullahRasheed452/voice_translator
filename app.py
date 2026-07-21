@@ -2,6 +2,8 @@
 
 import os
 import sys
+import webbrowser
+from threading import Timer
 from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 
@@ -49,5 +51,12 @@ def api_translate():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
+def open_browser() -> None:
+    """Automatically open default web browser to local server address."""
+    webbrowser.open("http://127.0.0.1:5000")
+
+
 if __name__ == "__main__":
+    # Pop open browser automatically 1.2s after starting server
+    Timer(1.2, open_browser).start()
     app.run(host="127.0.0.1", port=5000, debug=False)
