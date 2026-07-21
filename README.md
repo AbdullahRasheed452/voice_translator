@@ -54,20 +54,6 @@ python app.py
 
 Running `python app.py` will launch the Flask web server and automatically redirect you to **`http://127.0.0.1:5000`** in your browser.
 
----
-
-## ☁️ Cloud Deployment (Render.com)
-
-This app is configured for easy deployment on **Render**:
-
-1. Create a new **Web Service** on [Render.com](https://render.com) and link this repository.
-2. Set the **Start Command** to:
-   ```bash
-   gunicorn app:app
-   ```
-3. Click **Deploy** to launch your live web service!
-
----
 
 ## 📁 Project Structure
 
