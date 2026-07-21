@@ -3,5 +3,4 @@ numpy
 scipy
 openai-whisper
 deep-translator
-gTTS
-playsound==1.2.2
+pyttsx3
