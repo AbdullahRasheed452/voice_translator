@@ -81,6 +81,3 @@ voice_translator/
 
 Built by [Abdullah Rasheed](https://github.com/AbdullahRasheed452).
 
-## 📄 License
-
-MIT License
