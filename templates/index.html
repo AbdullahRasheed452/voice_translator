@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoiceFlow 3D — Next-Gen AI Translator</title>
+    <title>VoiceFlow AI — Live Neural Translator</title>
     
     <!-- Google Fonts: Inter & Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -575,12 +575,12 @@
         <!-- Header Navbar -->
         <header class="navbar" id="navCard">
             <div class="brand">
-                <div class="brand-logo"><i class="fa-solid fa-cube"></i></div>
-                <span class="brand-title">VoiceFlow 3D</span>
+                <div class="brand-logo"><i class="fa-solid fa-wave-square"></i></div>
+                <span class="brand-title">VoiceFlow AI</span>
             </div>
             <div class="engine-badge">
                 <div class="pulse-dot"></div>
-                <span>3D Neural Engine Active</span>
+                <span>Neural Speech Engine Active</span>
             </div>
         </header>
 
@@ -796,7 +796,23 @@
 
             recognition.onerror = (event) => {
                 console.error('Speech recognition error:', event.error);
-                setRecordingState(false);
+                if (event.error === 'not-allowed') {
+                    showToast('⚠️ Browser microphone permission blocked! Please allow mic access.', 'danger');
+                    setRecordingState(false);
+                } else if (event.error !== 'no-speech') {
+                    console.warn('Speech event error:', event.error);
+                }
+            };
+
+            recognition.onend = () => {
+                // If browser pauses speech recognition while user is recording, auto-restart it!
+                if (isListening) {
+                    try {
+                        recognition.start();
+                    } catch (e) {
+                        console.log('Recognition auto-restart note:', e);
+                    }
+                }
             };
         }
 
