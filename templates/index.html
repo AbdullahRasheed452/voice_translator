@@ -627,7 +627,7 @@
                         <i class="fa-solid fa-microphone"></i>
                     </button>
 
-                    <div class="deck-hint" id="deckHint">Click microphone to START speaking</div>
+                    <div class="deck-hint" id="deckHint">Click microphone to record</div>
                     <div class="kb-pill">Press <kbd>Spacebar</kbd> to record</div>
                 </div>
 
@@ -648,7 +648,7 @@
                             </div>
                         </div>
                         <div class="card-content" id="spokenText">
-                            <span class="placeholder-text">Speak into your mic — words stream live in real-time...</span>
+                            <span class="placeholder-text">Your spoken words will appear here...</span>
                         </div>
                     </div>
 
@@ -804,14 +804,15 @@
                 }
             };
 
+            let autoRestartTimer;
             recognition.onend = () => {
-                // If browser pauses speech recognition while user is recording, auto-restart it!
                 if (isListening) {
-                    try {
-                        recognition.start();
-                    } catch (e) {
-                        console.log('Recognition auto-restart note:', e);
-                    }
+                    clearTimeout(autoRestartTimer);
+                    autoRestartTimer = setTimeout(() => {
+                        if (isListening) {
+                            try { recognition.start(); } catch (e) {}
+                        }
+                    }, 300);
                 }
             };
         }
@@ -825,25 +826,36 @@
             if (!isListening) {
                 fullTranscribedText = '';
                 recognition.lang = spokenLang;
-                recognition.start();
                 setRecordingState(true);
-                document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Listening... Speak now!</span>';
+                try { recognition.start(); } catch (e) {}
+                document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Listening...</span>';
                 document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation pending...</span>';
             } else {
-                recognition.stop();
                 setRecordingState(false);
+                try { recognition.stop(); } catch (e) {}
 
-                const textToTranslate = fullTranscribedText.trim() || document.getElementById('spokenText').innerText.replace('Listening...', '').trim();
+                // Extract spoken text accurately
+                let textToTranslate = fullTranscribedText.trim();
+                if (!textToTranslate) {
+                    const currentText = document.getElementById('spokenText').innerText || '';
+                    textToTranslate = currentText
+                        .replace(/Listening\.\.\./g, '')
+                        .replace(/Your spoken words will appear here\.\.\./g, '')
+                        .trim();
+                }
 
-                if (textToTranslate) {
+                if (textToTranslate && textToTranslate.length > 0) {
                     executeTranslation(textToTranslate, targetLang);
+                } else {
+                    document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Your spoken words will appear here...</span>';
+                    document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation will appear here...</span>';
                 }
             }
         }
 
         async function executeTranslation(text, targetLang) {
             const hintText = document.getElementById('deckHint');
-            hintText.innerText = '⚡ 3D Neural Translation Active...';
+            hintText.innerText = '⚡ AI Neural Translation Active...';
 
             try {
                 const response = await fetch('/api/translate', {
@@ -863,13 +875,17 @@
                     addHistoryItem(result.spoken_text, result.translated_text, targetLang);
                     showToast('✅ Translated successfully!', 'success');
                 } else {
+                    document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Your spoken words will appear here...</span>';
+                    document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation will appear here...</span>';
                     showToast('⚠️ ' + result.message, 'danger');
                 }
             } catch (err) {
                 console.error('Translation error:', err);
+                document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Your spoken words will appear here...</span>';
+                document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation will appear here...</span>';
                 showToast('❌ Backend connection failed', 'danger');
             } finally {
-                hintText.innerText = 'Click microphone to START speaking';
+                hintText.innerText = 'Click microphone to record';
             }
         }
 
@@ -883,12 +899,12 @@
                 micBtn.classList.add('recording');
                 deck.classList.add('active');
                 micBtn.innerHTML = '<i class="fa-solid fa-stop"></i>';
-                hintText.innerText = '🎙️ Recording live... Click to STOP & TRANSLATE';
+                hintText.innerText = '🎙️ Recording live... Click to stop';
             } else {
                 micBtn.classList.remove('recording');
                 deck.classList.remove('active');
                 micBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-                hintText.innerText = 'Click microphone to START speaking';
+                hintText.innerText = 'Click microphone to record';
             }
         }
 
@@ -914,7 +930,7 @@
         }
 
         function clearCards() {
-            document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Speak into your mic — words stream live in real-time...</span>';
+            document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Your spoken words will appear here...</span>';
             document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation will appear here...</span>';
             showToast('🧹 Cards cleared', 'info');
         }
