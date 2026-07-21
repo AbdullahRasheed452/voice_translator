@@ -696,6 +696,15 @@
     <div class="toast-box" id="toastBox"></div>
 
     <script>
+        // Global Fail-Safe Error Boundaries (Prevents Browser Crashes)
+        window.onerror = function(msg, url, line) {
+            console.warn('Handled JS error boundary:', msg);
+            return true;
+        };
+        window.onunhandledrejection = function(event) {
+            console.warn('Handled Promise rejection boundary:', event.reason);
+        };
+
         let recognition;
         let isListening = false;
         let fullTranscribedText = '';
