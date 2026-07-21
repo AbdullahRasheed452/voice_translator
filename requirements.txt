@@ -8,3 +8,4 @@ playsound==1.2.2
 flask
 flask-cors
 imageio-ffmpeg
+gunicorn

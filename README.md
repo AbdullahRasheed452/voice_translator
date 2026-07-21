@@ -20,7 +20,7 @@ It lets you speak into your microphone in Urdu, English, Spanish, French, German
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python 3.14, Flask, Flask-CORS
+- **Backend**: Python 3.14, Flask, Flask-CORS, Gunicorn
 - **Speech Recognition**: Web Speech API + OpenAI Whisper (`medium`)
 - **Audio Processing**: NumPy, SciPy, SoundDevice, ImageIO-FFmpeg
 - **Translation Engine**: `deep-translator` (Google Translate API)
@@ -29,7 +29,7 @@ It lets you speak into your microphone in Urdu, English, Spanish, French, German
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Local Setup
 
 ### 1. Clone the repository
 ```bash
@@ -57,12 +57,36 @@ Open **`http://127.0.0.1:5000`** in Google Chrome or Microsoft Edge! 🎤
 
 ---
 
+## ☁️ Cloud Deployment Options
+
+### Option A: 1-Click Deployment on Render.com (Recommended & Free)
+1. Sign up at [Render.com](https://render.com) and click **New +** ➔ **Web Service**.
+2. Connect your GitHub repository (`voice_translator`).
+3. Render auto-detects Python. Set the **Start Command** to:
+   ```bash
+   gunicorn app:app
+   ```
+4. Click **Deploy Web Service** — your app is live on a public URL!
+
+### Option B: Docker Container Deployment
+```bash
+# Build Docker image
+docker build -t voice-translator .
+
+# Run Docker container
+docker run -p 5000:5000 voice-translator
+```
+
+---
+
 ## 📁 Project Structure
 
 ```
 voice_translator/
 ├── app.py                      # Flask web server & real-time API
 ├── config.py                   # Global audio settings (16kHz, mono)
+├── Procfile                    # Production Gunicorn launch config for Render/Heroku
+├── Dockerfile                  # Container definition for cloud deployment
 ├── requirements.txt            # Python dependencies
 ├── templates/
 │   └── index.html              # Web Dashboard (Canvas visualizer, dark UI)
