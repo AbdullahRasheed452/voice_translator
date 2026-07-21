@@ -31,9 +31,9 @@ def run_pipeline():
     # ---------------------------------------------------------
     # TODO 2: Transcribe Audio
     # ---------------------------------------------------------
-    print("\n[PIPELINE] Step 2: Transcribing (Urdu hint enabled)...")
+    print("\n[PIPELINE] Step 2: Transcribing...")
     model = load_model("small")
-    transcribed_text = transcribe_audio(model, temp_audio_file, language="ur")
+    transcribed_text = transcribe_audio(model, temp_audio_file)
 
     # ---------------------------------------------------------
     # TODO 3: Translate Text
