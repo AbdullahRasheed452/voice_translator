@@ -22,7 +22,7 @@ def load_model(model_name="base"):
     return model
 
 
-def transcribe_audio(model, audio_path):
+def transcribe_audio(model, audio_path, language=None):
     """Transcribe a WAV file to text using the loaded Whisper model."""
     print(f"[STT] Transcribing: {audio_path}")
 
@@ -37,11 +37,12 @@ def transcribe_audio(model, audio_path):
     if audio_float.ndim > 1:
         audio_float = audio_float[:, 0]
 
-    # model.transcribe() returns a dictionary with keys:
-    #   "text"     - the full transcribed text
-    #   "segments" - list of segments with timestamps
-    #   "language" - detected language
-    result = model.transcribe(audio_float, fp16=False)
+    # Transcribe with optional language hint (e.g. language="ur" for Urdu)
+    kwargs = {"fp16": False}
+    if language:
+        kwargs["language"] = language
+
+    result = model.transcribe(audio_float, **kwargs)
 
     text = result["text"].strip()
     language = result.get("language", "unknown")

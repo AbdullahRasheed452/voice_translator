@@ -1,6 +1,7 @@
-# Voice Translator - Text-to-Speech (TTS) Module using pyttsx3 (Offline & Instant)
+# Voice Translator - Text-to-Speech (TTS) Module
 
 import pyttsx3
+import subprocess
 import sys
 
 # Fix Windows terminal encoding
@@ -8,8 +9,8 @@ sys.stdout.reconfigure(encoding='utf-8')  # type: ignore
 
 def speak_text(text, lang='en'):
     """
-    Convert text to speech and play it INSTANTLY through Windows system speakers.
-    Uses offline pyttsx3 (SAPI5 on Windows).
+    Convert text to speech and play it through Windows system speakers.
+    Uses pyttsx3 with Windows System.Speech PowerShell fallback.
     """
     if not text or not text.strip():
         print("[TTS] Warning: Empty text provided. Nothing to speak.")
@@ -17,28 +18,31 @@ def speak_text(text, lang='en'):
 
     print(f"[TTS] Speaking out loud: '{text}'")
 
+    # Try pyttsx3 first
     try:
-        # Initialize the offline speech engine
         engine = pyttsx3.init()
-
-        # Set speaking rate (speed) - default is ~200, 175 is very natural
-        engine.setProperty('rate', 175)
-
-        # Set volume (0.0 to 1.0)
-        engine.setProperty('volume', 1.0)
-
-        # Speak and wait until finished
+        voices = engine.getProperty('voices')
+        if voices:
+            engine.setProperty('voice', voices[0].id)
+        engine.setProperty('rate', 165)
         engine.say(text)
         engine.runAndWait()
-        
-        # Stop and clean up the engine
-        engine.stop()
         print("[TTS] Playback finished.")
-
+        return
     except Exception as e:
-        print(f"[TTS] Error during text-to-speech: {e}")
+        print(f"[TTS] pyttsx3 note: {e}, using system speech synthesizer...")
+
+    # Reliable Windows PowerShell System.Speech fallback
+    try:
+        # Escape double quotes for PowerShell
+        clean_text = text.replace('"', '\\"')
+        ps_command = f'Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak("{clean_text}")'
+        subprocess.run(["powershell", "-Command", ps_command], check=True)
+        print("[TTS] Playback finished via System.Speech.")
+    except Exception as e:
+        print(f"[TTS] Error playing speech: {e}")
 
 
 if __name__ == "__main__":
-    print("--- Testing Offline TTS ---")
-    speak_text("Hello Abdullah! Your voice translator is now instant.", lang='en')
+    print("--- Testing Speech ---")
+    speak_text("Hello Abdullah! Voice translator audio check.", lang='en')
