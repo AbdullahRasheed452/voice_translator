@@ -1,17 +1,9 @@
-# ──────────────────────────────────────────────
-# Voice Translator — Audio Configuration
-# ──────────────────────────────────────────────
+"""Voice Translator - Configuration Module."""
 
 import numpy as np
 
-# Sample rate in Hz — 16kHz is the standard for speech recognition models
-SAMPLE_RATE = 16000
-
-# Mono audio — single channel is all we need for speech
-CHANNELS = 1
-
-# Number of samples read per chunk
-CHUNK_SIZE = 1024
-
-# Audio data type — 16-bit integer (2 bytes per sample)
+# Audio capture and model processing constants
+SAMPLE_RATE: int = 16000
+CHANNELS: int = 1
+CHUNK_SIZE: int = 1024
 DTYPE = np.int16

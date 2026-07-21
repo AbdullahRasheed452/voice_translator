@@ -1,63 +1,63 @@
-# Voice Translator - Main Pipeline (High Speed & High Accuracy)
+"""Voice Translator - Command-Line Pipeline Runner."""
 
 import os
 import sys
+from typing import Any
 
-# Add parent directory to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-# Import our custom modules
 from src.audio_capture import record_until_stopped, save_to_wav
 from src.transcriber import load_model, transcribe_audio
 from src.translator import translate_text
 from src.tts import speak_text
 
-def run_pipeline(model=None):
-    """Runs the full voice translation pipeline."""
-    temp_audio_file = "temp_pipeline_audio.wav"
-    target_language = "en" # Translate everything to English
 
-    # Load model once if not already passed in
-    if model is None:
-        model = load_model("medium")
+def run_single_translation(model: Any) -> None:
+    """Execute a single end-to-end terminal voice translation cycle."""
+    temp_audio = "temp_pipeline.wav"
+    target_lang = "en"
 
-    print("\n" + "="*50)
-    print("🎙️ REAL-TIME VOICE TRANSLATOR PIPELINE 🎙️")
-    print("="*50 + "\n")
-
-    # Step 1: Capture Audio
-    print("[PIPELINE] Step 1: Ready to record...")
+    # 1. Capture Audio
     audio_data = record_until_stopped()
-    save_to_wav(audio_data, temp_audio_file)
+    save_to_wav(audio_data, temp_audio)
 
-    # Step 2: High Speed Transcription (faster-whisper)
-    print("\n[PIPELINE] Step 2: Transcribing (High Speed)...")
-    transcribed_text = transcribe_audio(model, temp_audio_file)
+    # 2. Transcribe Audio
+    print("⏳ Processing...", end="\r")
+    transcribed_text, detected_lang = transcribe_audio(model, temp_audio)
 
-    # Step 3: Translate Text
-    print("\n[PIPELINE] Step 3: Translating...")
-    translated_text = translate_text(transcribed_text, target_lang=target_language)
+    # 3. Translate Text
+    translated_text = translate_text(transcribed_text, target_lang=target_lang)
 
-    # Step 4: Speak Translated Text (gTTS Female Voice)
-    print("\n[PIPELINE] Step 4: Speaking translation...")
-    speak_text(translated_text, lang=target_language)
-
-    # Step 5: Clean up
-    print("\n[PIPELINE] Step 5: Cleaning up...")
-    if os.path.exists(temp_audio_file):
+    # Clean up temporary audio file
+    if os.path.exists(temp_audio):
         try:
-            os.remove(temp_audio_file)
-            print(f"[PIPELINE] Deleted temporary file: {temp_audio_file}")
+            os.remove(temp_audio)
         except Exception:
             pass
 
-    print("\n✅ Pipeline complete!")
+    # Print Clean Output
+    print(" " * 30, end="\r")
+    print(f"\n🗣️ Spoken ({detected_lang.upper()}): {transcribed_text}")
+    print(f"🌍 English:      {translated_text}")
+
+    # 4. Speak Output Out Loud
+    if translated_text:
+        print("🔊 Speaking...")
+        speak_text(translated_text, lang=target_lang)
 
 
 if __name__ == "__main__":
-    # Pre-load model ONCE at startup so pipeline runs at lightning speed
-    print("Initializing Voice Translator Engine...")
+    print("Starting Voice Translator (High Accuracy Mode)...")
     shared_model = load_model("medium")
-    
-    # Run the pipeline
-    run_pipeline(shared_model)
+    print("✅ Ready!\n")
+
+    try:
+        while True:
+            run_single_translation(shared_model)
+            print("-" * 50)
+            choice = input("\n[Enter] to speak again | ['q' + Enter] to quit: ")
+            if choice.lower().strip() == "q":
+                print("Goodbye!")
+                break
+    except KeyboardInterrupt:
+        print("\nGoodbye!")

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceFlow — Next-Gen AI Translator</title>
+    
+    <!-- Google Fonts: Inter & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #070a12;
+            --surface-card: #0f172a;
+            --surface-card-hover: #1e293b;
+            --surface-inner: #0b1120;
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-glow: rgba(59, 130, 246, 0.35);
+            
+            /* Executive Electric Blue & Cyan Palette (NO PINK) */
+            --primary-blue: #3b82f6;
+            --primary-cyan: #06b6d4;
+            --blue-gradient: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+            --glow-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.4) 0%, rgba(6, 182, 212, 0.4) 100%);
+            --accent-emerald: #10b981;
+            --danger-red: #ef4444;
+            
+            --text-heading: #f8fafc;
+            --text-body: #cbd5e1;
+            --text-muted: #64748b;
+            
+            --radius-main: 20px;
+            --radius-inner: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .brand-title {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 0%, rgba(15, 23, 42, 0.8) 0px, transparent 80%);
+            color: var(--text-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 1rem;
+        }
+
+        /* Top Executive Header Navbar */
+        .navbar {
+            width: 100%;
+            max-width: 1080px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1.5rem;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-main);
+            margin-bottom: 1.75rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: var(--blue-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
+        }
+
+        .engine-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--accent-emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-emerald);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+        }
+
+        /* Workspace Grid Layout */
+        .workspace {
+            width: 100%;
+            max-width: 1080px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .workspace { grid-template-columns: 1fr; }
+        }
+
+        /* Main Studio Card */
+        .studio-card {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-main);
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Language Swap Control Header */
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--surface-inner);
+            border: 1px solid var(--border-subtle);
+            padding: 0.5rem;
+            border-radius: var(--radius-inner);
+        }
+
+        .select-group {
+            flex: 1;
+            position: relative;
+        }
+
+        .select-group select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-heading);
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.65rem 1rem;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .select-group select option {
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 0.6rem 1rem;
+        }
+
+        .select-group::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .swap-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+        }
+
+        .swap-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+            transform: rotate(180deg);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Recording Visualizer Deck */
+        .visualizer-deck {
+            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.06) 0%, transparent 70%), var(--surface-inner);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-inner);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .visualizer-deck.active {
+            border-color: var(--border-glow);
+        }
+
+        /* Canvas Sound Wave */
+        #waveCanvas {
+            width: 100%;
+            height: 50px;
+            opacity: 0.35;
+            transition: opacity 0.3s ease;
+        }
+
+        .visualizer-deck.active #waveCanvas {
+            opacity: 1;
+        }
+
+        /* Glowing Electric Blue Mic Button */
+        .mic-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--blue-gradient);
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 2;
+        }
+
+        .mic-button:hover {
+            transform: scale(1.06);
+            box-shadow: 0 12px 35px rgba(6, 182, 212, 0.5);
+        }
+
+        .mic-button.recording {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            animation: ring-pulse 1.5s infinite;
+        }
+
+        @keyframes ring-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+            70% { box-shadow: 0 0 0 22px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        .deck-hint {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .kb-pill {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--surface-card);
+            padding: 0.2rem 0.55rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Dual Output Text Cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 640px) {
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--surface-inner);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-inner);
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 180px;
+            transition: all 0.25s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-glow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.85rem;
+        }
+
+        .card-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.35rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .card-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-heading);
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .interim-text {
+            color: var(--primary-cyan);
+            font-style: italic;
+        }
+
+        .placeholder-text {
+            color: var(--text-muted);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        /* Sidebar History Drawer */
+        .sidebar {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-main);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .sidebar-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-clear {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-clear:hover {
+            color: var(--danger-red);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            overflow-y: auto;
+            max-height: 460px;
+        }
+
+        .history-item {
+            background: var(--surface-inner);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary-cyan);
+            transform: translateX(3px);
+        }
+
+        .hist-spoken {
+            font-size: 0.85rem;
+            color: var(--text-body);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hist-translated {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-cyan);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .hist-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Toast Container */
+        .toast-box {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background: var(--surface-card);
+            color: var(--text-heading);
+            border: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.2rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(15px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-logo"><i class="fa-solid fa-bolt"></i></div>
+            <span class="brand-title">VoiceFlow AI</span>
+        </div>
+        <div class="engine-badge">
+            <div class="pulse-dot"></div>
+            <span>Neural Speech Engine Active</span>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+        
+        <!-- Translation Studio Panel -->
+        <section class="studio-card">
+            
+            <!-- Language Controls Bar -->
+            <div class="controls-bar">
+                <div class="select-group">
+                    <select id="spokenLang">
+                        <option value="ur-PK" selected>Urdu (اردو)</option>
+                        <option value="en-US">English (US)</option>
+                        <option value="es-ES">Spanish (Español)</option>
+                        <option value="fr-FR">French (Français)</option>
+                        <option value="de-DE">German (Deutsch)</option>
+                        <option value="ar-SA">Arabic (العربية)</option>
+                    </select>
+                </div>
+
+                <button class="swap-btn" onclick="swapLanguages()" title="Swap Languages">
+                    <i class="fa-solid fa-right-left"></i>
+                </button>
+
+                <div class="select-group">
+                    <select id="targetLang">
+                        <option value="en" selected>English</option>
+                        <option value="ur">Urdu (اردو)</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="ar">Arabic</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Visualizer Deck & Button -->
+            <div class="visualizer-deck" id="visualizerDeck">
+                <canvas id="waveCanvas"></canvas>
+                
+                <button class="mic-button" id="micBtn" onclick="toggleLiveSpeech()">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+
+                <div class="deck-hint" id="deckHint">Click microphone to START speaking</div>
+                <div class="kb-pill">Press <kbd>Spacebar</kbd> to record</div>
+            </div>
+
+            <!-- Speech & Translation Cards Grid -->
+            <div class="cards-grid">
+                
+                <!-- Spoken Input Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title"><i class="fa-solid fa-comment-dots" style="color: var(--primary-cyan)"></i> Live Input</span>
+                        <div class="card-actions">
+                            <button class="btn-icon" onclick="copyText('spokenText')" title="Copy Text">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <button class="btn-icon" onclick="clearCards()" title="Clear Card">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content" id="spokenText">
+                        <span class="placeholder-text">Speak into your mic — words stream live in real-time...</span>
+                    </div>
+                </div>
+
+                <!-- Translation Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title"><i class="fa-solid fa-sparkles" style="color: var(--primary-blue)"></i> AI Translation</span>
+                        <div class="card-actions">
+                            <button class="btn-icon" onclick="copyText('translatedText')" title="Copy Translation">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <button class="btn-icon" onclick="replayAudio()" title="Listen Again">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content" id="translatedText">
+                        <span class="placeholder-text">Translation will appear here...</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Sidebar Activity Drawer -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</div>
+                <button class="btn-clear" onclick="clearHistory()">Clear All</button>
+            </div>
+
+            <div class="history-list" id="historyList">
+                <div class="history-item" style="cursor: default; opacity: 0.5;">
+                    <div class="hist-spoken">Your recent translations will appear here...</div>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Toast Notifications -->
+    <div class="toast-box" id="toastBox"></div>
+
+    <script>
+        let recognition;
+        let isListening = false;
+        let fullTranscribedText = '';
+        let lastTranslationText = '';
+        let lastTargetLang = 'en';
+
+        // Electric Blue & Cyan Soundwave Animation
+        const canvas = document.getElementById('waveCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 50;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function renderWave(time) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = 2;
+            
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(0.5, '#3b82f6');
+            gradient.addColorStop(1, '#06b6d4');
+            ctx.strokeStyle = gradient;
+
+            ctx.beginPath();
+            const step = canvas.width / 80;
+            let x = 0;
+
+            for (let i = 0; i < 80; i++) {
+                const amp = isListening ? Math.sin(time * 0.006 + i * 0.12) * 16 + 20 : 4;
+                const y = (canvas.height / 2) + Math.sin(time * 0.003 + i * 0.25) * amp;
+
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+
+                x += step;
+            }
+
+            ctx.stroke();
+            requestAnimationFrame(renderWave);
+        }
+        requestAnimationFrame(renderWave);
+
+        // Web Speech API Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            showToast('⚠️ Web Speech API not supported on this browser. Please use Chrome or Edge.', 'danger');
+        } else {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript + ' ';
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+
+                fullTranscribedText += finalTranscript;
+                const displayText = fullTranscribedText + '<span class="interim-text">' + interimTranscript + '</span>';
+                document.getElementById('spokenText').innerHTML = displayText || '<span class="placeholder-text">Listening...</span>';
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                setRecordingState(false);
+            };
+        }
+
+        function toggleLiveSpeech() {
+            if (!SpeechRecognition) return;
+
+            const spokenLang = document.getElementById('spokenLang').value;
+            const targetLang = document.getElementById('targetLang').value;
+
+            if (!isListening) {
+                fullTranscribedText = '';
+                recognition.lang = spokenLang;
+                recognition.start();
+                setRecordingState(true);
+                document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Listening... Speak now!</span>';
+                document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation pending...</span>';
+            } else {
+                recognition.stop();
+                setRecordingState(false);
+
+                const textToTranslate = fullTranscribedText.trim() || document.getElementById('spokenText').innerText.replace('Listening...', '').trim();
+
+                if (textToTranslate) {
+                    executeTranslation(textToTranslate, targetLang);
+                }
+            }
+        }
+
+        async function executeTranslation(text, targetLang) {
+            const hintText = document.getElementById('deckHint');
+            hintText.innerText = '⚡ AI Translating & Synthesizing Speech...';
+
+            try {
+                const response = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text, target_language: targetLang })
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    document.getElementById('spokenText').innerText = result.spoken_text;
+                    document.getElementById('translatedText').innerText = result.translated_text;
+                    
+                    lastTranslationText = result.translated_text;
+                    lastTargetLang = targetLang;
+
+                    addHistoryItem(result.spoken_text, result.translated_text, targetLang);
+                    showToast('✅ Translated successfully!', 'success');
+                } else {
+                    showToast('⚠️ ' + result.message, 'danger');
+                }
+            } catch (err) {
+                console.error('Translation error:', err);
+                showToast('❌ Backend connection failed', 'danger');
+            } finally {
+                hintText.innerText = 'Click microphone to START speaking';
+            }
+        }
+
+        function setRecordingState(active) {
+            isListening = active;
+            const micBtn = document.getElementById('micBtn');
+            const deck = document.getElementById('visualizerDeck');
+            const hintText = document.getElementById('deckHint');
+
+            if (active) {
+                micBtn.classList.add('recording');
+                deck.classList.add('active');
+                micBtn.innerHTML = '<i class="fa-solid fa-stop"></i>';
+                hintText.innerText = '🎙️ Recording live... Click to STOP & TRANSLATE';
+            } else {
+                micBtn.classList.remove('recording');
+                deck.classList.remove('active');
+                micBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+                hintText.innerText = 'Click microphone to START speaking';
+            }
+        }
+
+        function swapLanguages() {
+            const spokenSelect = document.getElementById('spokenLang');
+            const targetSelect = document.getElementById('targetLang');
+
+            const currentSpoken = spokenSelect.value;
+            if (currentSpoken.startsWith('ur')) spokenSelect.value = 'en-US';
+            else spokenSelect.value = 'ur-PK';
+
+            if (targetSelect.value === 'en') targetSelect.value = 'ur';
+            else targetSelect.value = 'en';
+
+            showToast('🔄 Languages swapped!', 'info');
+        }
+
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            if (!text || text.includes('will appear here')) return;
+            navigator.clipboard.writeText(text);
+            showToast('📋 Copied to clipboard!', 'success');
+        }
+
+        function clearCards() {
+            document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Speak into your mic — words stream live in real-time...</span>';
+            document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation will appear here...</span>';
+            showToast('🧹 Cards cleared', 'info');
+        }
+
+        function replayAudio() {
+            if (lastTranslationText) {
+                executeTranslation(lastTranslationText, lastTargetLang);
+            } else {
+                showToast('⚠️ No translation to replay', 'danger');
+            }
+        }
+
+        // History Drawer
+        let history = [];
+        function addHistoryItem(spoken, translated, lang) {
+            if (history.length === 0) {
+                document.getElementById('historyList').innerHTML = '';
+            }
+            
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            history.unshift({ spoken, translated, lang, time: timeStr });
+
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.innerHTML = `
+                <div class="hist-spoken">${spoken}</div>
+                <div class="hist-translated">${translated}</div>
+                <div class="hist-meta">
+                    <span>${lang.toUpperCase()}</span>
+                    <span>${timeStr}</span>
+                </div>
+            `;
+            div.onclick = () => {
+                document.getElementById('spokenText').innerText = spoken;
+                document.getElementById('translatedText').innerText = translated;
+            };
+
+            const list = document.getElementById('historyList');
+            list.insertBefore(div, list.firstChild);
+        }
+
+        function clearHistory() {
+            history = [];
+            document.getElementById('historyList').innerHTML = `
+                <div class="history-item" style="cursor: default; opacity: 0.5;">
+                    <div class="hist-spoken">Your recent translations will appear here...</div>
+                </div>
+            `;
+            showToast('🧹 History cleared', 'info');
+        }
+
+        // Spacebar Shortcut
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && e.target.tagName !== 'SELECT' && e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+                toggleLiveSpeech();
+            }
+        });
+
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = msg;
+            box.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+    </script>
+</body>
+</html>

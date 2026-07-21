@@ -1,7 +1,10 @@
 sounddevice
 numpy
 scipy
-faster-whisper
+openai-whisper
 deep-translator
 gTTS
 playsound==1.2.2
+flask
+flask-cors
+imageio-ffmpeg

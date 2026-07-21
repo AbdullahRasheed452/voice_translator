@@ -1,55 +1,67 @@
-# Voice Translator - Speech-to-Text Module (faster-whisper / CTranslate2)
+"""Voice Translator - Speech-to-Text (STT) Module."""
 
-from faster_whisper import WhisperModel
-import sys
 import os
+import sys
+from typing import Any
+import imageio_ffmpeg
+import numpy as np
+from scipy.io.wavfile import read as read_wav
+import whisper
 
-# Fix Windows terminal encoding
-sys.stdout.reconfigure(encoding='utf-8')  # type: ignore
+# Reconfigure stdout for UTF-8 non-Latin script printing on Windows
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
-# Add parent directory to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from config import SAMPLE_RATE
-
-
-def load_model(model_name="medium"):
-    """
-    Load a fast, CTranslate2-optimized Whisper model.
-    Uses 'int8' quantization on CPU for 4x-8x speedup with 100% accuracy.
-    """
-    print(f"[STT] Loading faster-whisper model: '{model_name}' (CPU int8 optimized)...")
-    # compute_type="int8" enables high-speed quantization on CPU
-    model = WhisperModel(model_name, device="cpu", compute_type="int8")
-    print("[STT] Model loaded successfully!")
-    return model
+# Register bundled ffmpeg binary into environment PATH
+ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+ffmpeg_dir = os.path.dirname(ffmpeg_exe)
+if ffmpeg_dir not in os.environ["PATH"]:
+    os.environ["PATH"] += os.pathsep + ffmpeg_dir
 
 
-def transcribe_audio(model, audio_path, language=None):
-    """
-    Transcribe a WAV file to text using faster-whisper.
-    """
-    print(f"[STT] Transcribing: {audio_path}")
+def load_model(model_name: str = "medium") -> Any:
+    """Load OpenAI Whisper Speech-to-Text model into memory."""
+    return whisper.load_model(model_name)
 
-    # Transcribe audio file
-    segments, info = model.transcribe(audio_path, beam_size=5, language=language)
-    
-    text = " ".join([segment.text for segment in segments]).strip()
-    detected_lang = info.language
 
-    # SMART FIX: If auto-detect picked Hindi ('hi'), re-route to Urdu ('ur')
+def transcribe_audio(
+    model: Any,
+    audio_path: str,
+    language: str | None = None
+) -> tuple[str, str]:
+    """Transcribe audio file into text with Urdu context prompting and auto-routing."""
+    try:
+        sample_rate, audio_data = read_wav(audio_path)
+        audio_float = audio_data.astype(np.float32) / 32768.0
+        if audio_float.ndim > 1:
+            audio_float = audio_float[:, 0]
+    except Exception:
+        audio_float = audio_path
+
+    # Context prompt for Pakistani cities, names, and greetings
+    urdu_context_prompt = (
+        "اردو گفتگو: پاکستان، فیصل آباد، لاہور، کراچی، اسلام آباد، "
+        "میرا نام، آپ کا نام، کیا حال ہے، میں ٹھیک ہوں، شکریہ۔"
+    )
+
+    kwargs: dict[str, Any] = {
+        "fp16": False,
+        "temperature": 0.0,
+        "beam_size": 5,
+        "initial_prompt": urdu_context_prompt,
+    }
+
+    if language:
+        kwargs["language"] = language
+
+    result = model.transcribe(audio_float, **kwargs)
+    detected_lang: str = result.get("language", "unknown")
+
+    # Smart auto-route Hindi predictions to Urdu script
     if not language and detected_lang == "hi":
-        print("[STT] Detected Hindi/Urdu phonemes. Re-routing to Urdu script...")
-        segments, info = model.transcribe(audio_path, beam_size=5, language="ur")
-        text = " ".join([segment.text for segment in segments]).strip()
+        kwargs["language"] = "ur"
+        result = model.transcribe(audio_float, **kwargs)
         detected_lang = "ur"
 
-    print(f"[STT] Language detected: {detected_lang}")
-    print(f"[STT] Result: {text}")
-    return text
-
-
-if __name__ == "__main__":
-    model = load_model("medium")
-    audio_file = os.path.join(os.path.dirname(__file__), '..', 'test_recording.wav')
-    if os.path.exists(audio_file):
-        transcribe_audio(model, audio_file)
+    text: str = result["text"].strip()
+    return text, detected_lang
