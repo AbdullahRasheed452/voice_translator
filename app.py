@@ -24,7 +24,7 @@ def handle_global_exception(e: Exception):
     print(f"[SERVER ERROR] Handled exception: {e}")
     return jsonify({
         "status": "error",
-        "message": "Translation service temporary note: " + str(e)
+        "message": "Translation service note: " + str(e)
     }), 200
 
 
@@ -33,8 +33,8 @@ def index():
     """Render the main interactive Web UI dashboard."""
     try:
         return render_template("index.html")
-    except Exception as e:
-        return f"<h1>Dashboard Loading...</h1><script>setTimeout(()=>location.reload(), 1000)</script>", 200
+    except Exception:
+        return "<h1>Dashboard Loading...</h1><script>setTimeout(()=>location.reload(), 1000)</script>", 200
 
 
 @app.route("/api/translate", methods=["POST"])
@@ -43,18 +43,23 @@ def api_translate():
     try:
         data = request.json or {}
         spoken_text = data.get("text", "").strip()
+        source_lang = data.get("source_language", "auto")
         target_lang = data.get("target_language", "en")
 
         if not spoken_text:
             return jsonify({"status": "warning", "message": "No text received"}), 200
 
-        # Translate spoken text safely
-        translated_text = translate_text(spoken_text, target_lang=target_lang)
+        # Translate spoken text with explicit source language support
+        translated_text = translate_text(
+            text=spoken_text,
+            source_lang=source_lang,
+            target_lang=target_lang
+        )
 
-        # Synthesize voice audio safely without blocking response thread
+        # Synthesize voice audio safely
         if translated_text:
             try:
-                speak_text(translated_text, lang=target_lang)
+                speak_text(translated_text, lang=target_lang.split("-")[0])
             except Exception as tts_err:
                 print(f"[TTS NOTE] Voice playback skipped: {tts_err}")
 
@@ -62,6 +67,7 @@ def api_translate():
             "status": "success",
             "spoken_text": spoken_text,
             "translated_text": translated_text or spoken_text,
+            "source_language": source_lang.upper(),
             "target_language": target_lang.upper(),
         }), 200
 
@@ -74,15 +80,16 @@ def api_translate():
 
 def open_browser() -> None:
     """Automatically open default web browser to local server address."""
+    url = "http://127.0.0.1:5000"
     try:
-        webbrowser.open("http://127.0.0.1:5000")
+        os.startfile(url)
     except Exception:
-        pass
+        try:
+            webbrowser.open(url)
+        except Exception:
+            print(f"Open your browser at: {url}")
 
 
 if __name__ == "__main__":
-    try:
-        Timer(1.2, open_browser).start()
-    except Exception:
-        pass
+    Timer(1.5, open_browser).start()
     app.run(host="127.0.0.1", port=5000, debug=False)

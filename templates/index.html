@@ -854,7 +854,7 @@
                 }
 
                 if (textToTranslate && textToTranslate.length > 0) {
-                    executeTranslation(textToTranslate, targetLang);
+                    executeTranslation(textToTranslate, spokenLang, targetLang);
                 } else {
                     document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Your spoken words will appear here...</span>';
                     document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation will appear here...</span>';
@@ -862,7 +862,7 @@
             }
         }
 
-        async function executeTranslation(text, targetLang) {
+        async function executeTranslation(text, spokenLang, targetLang) {
             const hintText = document.getElementById('deckHint');
             hintText.innerText = '⚡ AI Neural Translation Active...';
 
@@ -870,7 +870,11 @@
                 const response = await fetch('/api/translate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: text, target_language: targetLang })
+                    body: JSON.stringify({ 
+                        text: text, 
+                        source_language: spokenLang,
+                        target_language: targetLang 
+                    })
                 });
                 const result = await response.json();
 
@@ -946,7 +950,7 @@
 
         function replayAudio() {
             if (lastTranslationText) {
-                executeTranslation(lastTranslationText, lastTargetLang);
+                executeTranslation(lastTranslationText, 'auto', lastTargetLang);
             } else {
                 showToast('⚠️ No translation to replay', 'danger');
             }
