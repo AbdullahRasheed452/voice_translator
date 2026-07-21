@@ -30,8 +30,8 @@ def translate_text(
         result = translator.translate(text)
         if result and result.strip():
             return result
-    except Exception as err:
-        print(f"[TRANSLATE NOTE] Primary source={clean_source} note: {err}")
+    except Exception:
+        pass
 
     try:
         # 2. Fallback Translation with auto-detected source language
@@ -39,7 +39,7 @@ def translate_text(
         result = translator.translate(text)
         if result and result.strip():
             return result
-    except Exception as fallback_err:
-        print(f"[TRANSLATE NOTE] Auto-detect fallback note: {fallback_err}")
+    except Exception:
+        pass
 
     return text

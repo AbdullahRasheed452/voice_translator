@@ -2,15 +2,20 @@
 
 import os
 import sys
-import webbrowser
+import subprocess
+import logging
 from threading import Timer
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask_cors import CORS
 
 sys.path.append(os.path.dirname(__file__))
 
 from src.translator import translate_text
 from src.tts import speak_text
+
+# Silence Flask's default request logging
+log = logging.getLogger("werkzeug")
+log.setLevel(logging.ERROR)
 
 app = Flask(__name__)
 CORS(app)
@@ -20,12 +25,14 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 @app.errorhandler(Exception)
 def handle_global_exception(e: Exception):
-    """Fail-safe global error handler: Catches all unhandled server exceptions gracefully."""
-    print(f"[SERVER ERROR] Handled exception: {e}")
-    return jsonify({
-        "status": "error",
-        "message": "Translation service note: " + str(e)
-    }), 200
+    """Fail-safe global error handler."""
+    return jsonify({"status": "error", "message": str(e)}), 200
+
+
+@app.route("/favicon.ico")
+def favicon():
+    """Serve favicon to prevent 404 noise."""
+    return "", 204
 
 
 @app.route("/")
@@ -34,12 +41,12 @@ def index():
     try:
         return render_template("index.html")
     except Exception:
-        return "<h1>Dashboard Loading...</h1><script>setTimeout(()=>location.reload(), 1000)</script>", 200
+        return "<h1>Loading...</h1><script>setTimeout(()=>location.reload(), 1000)</script>", 200
 
 
 @app.route("/api/translate", methods=["POST"])
 def api_translate():
-    """Real-time translation and voice synthesis endpoint with fail-safe guards."""
+    """Real-time translation and voice synthesis endpoint."""
     try:
         data = request.json or {}
         spoken_text = data.get("text", "").strip()
@@ -49,19 +56,17 @@ def api_translate():
         if not spoken_text:
             return jsonify({"status": "warning", "message": "No text received"}), 200
 
-        # Translate spoken text with explicit source language support
         translated_text = translate_text(
             text=spoken_text,
             source_lang=source_lang,
             target_lang=target_lang
         )
 
-        # Synthesize voice audio safely
         if translated_text:
             try:
                 speak_text(translated_text, lang=target_lang.split("-")[0])
-            except Exception as tts_err:
-                print(f"[TTS NOTE] Voice playback skipped: {tts_err}")
+            except Exception:
+                pass
 
         return jsonify({
             "status": "success",
@@ -72,24 +77,21 @@ def api_translate():
         }), 200
 
     except Exception as e:
-        return jsonify({
-            "status": "error",
-            "message": "Translation processing note: " + str(e)
-        }), 200
+        return jsonify({"status": "error", "message": str(e)}), 200
 
 
 def open_browser() -> None:
     """Automatically open default web browser to local server address."""
-    url = "http://127.0.0.1:5000"
     try:
-        os.startfile(url)
+        subprocess.Popen('start "" "http://127.0.0.1:5000"', shell=True)
     except Exception:
         try:
-            webbrowser.open(url)
+            os.startfile("http://127.0.0.1:5000")
         except Exception:
-            print(f"Open your browser at: {url}")
+            pass
 
 
 if __name__ == "__main__":
+    print("VoiceFlow AI running at http://127.0.0.1:5000")
     Timer(1.5, open_browser).start()
     app.run(host="127.0.0.1", port=5000, debug=False)
