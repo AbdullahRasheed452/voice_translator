@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VoiceFlow — Next-Gen AI Translator</title>
+    <title>VoiceFlow 3D — Next-Gen AI Translator</title>
     
     <!-- Google Fonts: Inter & Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --bg-dark: #070a12;
-            --surface-card: #0f172a;
-            --surface-card-hover: #1e293b;
-            --surface-inner: #0b1120;
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --border-glow: rgba(59, 130, 246, 0.35);
+            --bg-dark: #050811;
+            --surface-card: #0c1322;
+            --surface-inner: #070d19;
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --border-glow: rgba(59, 130, 246, 0.5);
             
-            /* Executive Electric Blue & Cyan Palette (NO PINK) */
+            /* Executive 3D Electric Blue Palette */
             --primary-blue: #3b82f6;
             --primary-cyan: #06b6d4;
             --blue-gradient: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
-            --glow-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.4) 0%, rgba(6, 182, 212, 0.4) 100%);
+            --3d-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(37, 99, 235, 0.15);
+            --3d-inset: inset 0 1px 1px rgba(255, 255, 255, 0.15), inset 0 -2px 5px rgba(0, 0, 0, 0.6);
             --accent-emerald: #10b981;
             --danger-red: #ef4444;
             
-            --text-heading: #f8fafc;
+            --text-heading: #ffffff;
             --text-body: #cbd5e1;
             --text-muted: #64748b;
             
-            --radius-main: 20px;
-            --radius-inner: 14px;
+            --radius-main: 24px;
+            --radius-inner: 16px;
         }
 
         * {
@@ -50,92 +50,106 @@
         body {
             background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
-                radial-gradient(at 50% 0%, rgba(15, 23, 42, 0.8) 0px, transparent 80%);
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(5, 8, 17, 0.9) 0px, transparent 100%);
             color: var(--text-body);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 1.5rem 1rem;
+            perspective: 1200px;
+            overflow-x: hidden;
         }
 
-        /* Top Executive Header Navbar */
+        /* 3D Perspective Card Wrapper */
+        .perspective-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* Top 3D Header Navbar */
         .navbar {
             width: 100%;
-            max-width: 1080px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.85rem 1.5rem;
-            background: rgba(15, 23, 42, 0.75);
+            padding: 1rem 1.75rem;
+            background: rgba(12, 19, 34, 0.85);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-main);
             margin-bottom: 1.75rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--3d-shadow), var(--3d-inset);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.85rem;
+            transform: translateZ(20px);
         }
 
         .brand-logo {
-            width: 38px;
-            height: 38px;
+            width: 42px;
+            height: 42px;
             background: var(--blue-gradient);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.1rem;
-            box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+            font-size: 1.2rem;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4), inset 0 2px 3px rgba(255,255,255,0.4);
+            transform: translateZ(10px);
         }
 
         .brand-title {
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 1.35rem;
+            font-weight: 800;
             color: var(--text-heading);
             letter-spacing: -0.02em;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .engine-badge {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.12);
             color: var(--accent-emerald);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            padding: 0.35rem 0.85rem;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.4rem 1rem;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.82rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 0.45rem;
+            gap: 0.5rem;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+            transform: translateZ(15px);
         }
 
         .pulse-dot {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             background: var(--accent-emerald);
             border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-emerald);
+            box-shadow: 0 0 12px var(--accent-emerald);
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.2); }
+            50% { opacity: 0.4; transform: scale(1.3); }
         }
 
         /* Workspace Grid Layout */
         .workspace {
             width: 100%;
-            max-width: 1080px;
             display: grid;
-            grid-template-columns: 1fr 320px;
+            grid-template-columns: 1fr 330px;
             gap: 1.5rem;
         }
 
@@ -143,28 +157,32 @@
             .workspace { grid-template-columns: 1fr; }
         }
 
-        /* Main Studio Card */
+        /* 3D Interactive Studio Card */
         .studio-card {
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(12, 19, 34, 0.85);
             backdrop-filter: blur(24px);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-main);
-            padding: 1.75rem;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            gap: 1.75rem;
+            box-shadow: var(--3d-shadow), var(--3d-inset);
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out;
         }
 
-        /* Language Swap Control Header */
+        /* Language Controls Bar */
         .controls-bar {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.85rem;
             background: var(--surface-inner);
             border: 1px solid var(--border-subtle);
-            padding: 0.5rem;
+            padding: 0.6rem;
             border-radius: var(--radius-inner);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+            transform: translateZ(25px);
         }
 
         .select-group {
@@ -178,16 +196,16 @@
             border: none;
             color: var(--text-heading);
             font-size: 0.95rem;
-            font-weight: 600;
-            padding: 0.65rem 1rem;
+            font-weight: 700;
+            padding: 0.7rem 1rem;
             outline: none;
             cursor: pointer;
             appearance: none;
         }
 
         .select-group select option {
-            background-color: #0f172a;
-            color: #f8fafc;
+            background-color: #0c1322;
+            color: #ffffff;
             padding: 0.6rem 1rem;
         }
 
@@ -203,52 +221,58 @@
             pointer-events: none;
         }
 
+        /* 3D Rotating Swap Button */
         .swap-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: var(--surface-card);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(145deg, #141f36, #090e1a);
             border: 1px solid var(--border-subtle);
-            color: var(--text-muted);
+            color: var(--primary-cyan);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.25s ease;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.15);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateZ(15px);
         }
 
         .swap-btn:hover {
-            background: var(--primary-blue);
+            background: var(--blue-gradient);
             color: white;
             border-color: var(--primary-blue);
-            transform: rotate(180deg);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            transform: translateZ(25px) rotate(180deg) scale(1.1);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5);
         }
 
-        /* Recording Visualizer Deck */
+        /* 3D Visualizer & Record Deck */
         .visualizer-deck {
-            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.06) 0%, transparent 70%), var(--surface-inner);
+            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.08) 0%, transparent 70%), var(--surface-inner);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-inner);
-            padding: 2rem 1.5rem;
+            padding: 2.25rem 1.5rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 1.25rem;
             position: relative;
-            overflow: hidden;
-            transition: border-color 0.3s ease;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.7), 0 10px 25px rgba(0,0,0,0.4);
+            transform: translateZ(30px);
+            transform-style: preserve-3d;
+            transition: all 0.3s ease;
         }
 
         .visualizer-deck.active {
             border-color: var(--border-glow);
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.7), 0 0 35px rgba(6, 182, 212, 0.3);
         }
 
         /* Canvas Sound Wave */
         #waveCanvas {
             width: 100%;
-            height: 50px;
-            opacity: 0.35;
+            height: 60px;
+            opacity: 0.4;
             transition: opacity 0.3s ease;
         }
 
@@ -256,61 +280,72 @@
             opacity: 1;
         }
 
-        /* Glowing Electric Blue Mic Button */
+        /* 3D Giant Metallic Mic Button */
         .mic-button {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            background: var(--blue-gradient);
-            border: none;
+            background: radial-gradient(circle at 30% 30%, #3b82f6 0%, #1d4ed8 70%, #1e40af 100%);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             color: white;
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             cursor: pointer;
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            box-shadow: 
+                0 15px 35px rgba(37, 99, 235, 0.5),
+                0 5px 15px rgba(0, 0, 0, 0.8),
+                inset 0 3px 5px rgba(255, 255, 255, 0.4),
+                inset 0 -5px 10px rgba(0, 0, 0, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 2;
+            transform: translateZ(40px);
         }
 
         .mic-button:hover {
-            transform: scale(1.06);
-            box-shadow: 0 12px 35px rgba(6, 182, 212, 0.5);
+            transform: translateZ(50px) scale(1.08);
+            box-shadow: 
+                0 20px 45px rgba(6, 182, 212, 0.6),
+                0 5px 15px rgba(0, 0, 0, 0.8),
+                inset 0 3px 6px rgba(255, 255, 255, 0.6);
         }
 
         .mic-button.recording {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            background: radial-gradient(circle at 30% 30%, #f43f5e 0%, #dc2626 70%, #991b1b 100%);
+            box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
             animation: ring-pulse 1.5s infinite;
         }
 
         @keyframes ring-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
-            70% { box-shadow: 0 0 0 22px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
+            70% { box-shadow: 0 0 0 26px rgba(244, 63, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
         }
 
         .deck-hint {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-body);
+            transform: translateZ(20px);
         }
 
         .kb-pill {
             font-size: 0.75rem;
             color: var(--text-muted);
             background: var(--surface-card);
-            padding: 0.2rem 0.55rem;
-            border-radius: 6px;
+            padding: 0.25rem 0.65rem;
+            border-radius: 8px;
             border: 1px solid var(--border-subtle);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            transform: translateZ(15px);
         }
 
-        /* Dual Output Text Cards */
+        /* 3D Output Cards Grid */
         .cards-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.25rem;
+            transform: translateZ(30px);
         }
 
         @media (max-width: 640px) {
@@ -321,15 +356,18 @@
             background: var(--surface-inner);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-inner);
-            padding: 1.25rem;
+            padding: 1.35rem;
             display: flex;
             flex-direction: column;
-            min-height: 180px;
-            transition: all 0.25s ease;
+            min-height: 190px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
         }
 
         .card:hover {
             border-color: var(--border-glow);
+            transform: translateZ(10px);
         }
 
         .card-header {
@@ -337,29 +375,30 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 0.85rem;
+            transform: translateZ(10px);
         }
 
         .card-title {
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-size: 0.78rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
             color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.45rem;
         }
 
         .card-actions {
             display: flex;
-            gap: 0.35rem;
+            gap: 0.4rem;
         }
 
         .btn-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: var(--surface-card);
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(145deg, #141f36, #090e1a);
             border: 1px solid var(--border-subtle);
             color: var(--text-muted);
             cursor: pointer;
@@ -367,21 +406,24 @@
             align-items: center;
             justify-content: center;
             font-size: 0.85rem;
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
+            transition: all 0.25s ease;
         }
 
         .btn-icon:hover {
             background: var(--primary-blue);
             color: white;
             border-color: var(--primary-blue);
+            transform: translateZ(10px) scale(1.1);
         }
 
         .card-content {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             line-height: 1.6;
             color: var(--text-heading);
             flex: 1;
             word-break: break-word;
+            transform: translateZ(15px);
         }
 
         .interim-text {
@@ -395,17 +437,19 @@
             font-weight: 400;
         }
 
-        /* Sidebar History Drawer */
+        /* 3D Sidebar Activity Drawer */
         .sidebar {
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(12, 19, 34, 0.85);
             backdrop-filter: blur(24px);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-main);
-            padding: 1.5rem;
+            padding: 1.75rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            gap: 1.25rem;
+            box-shadow: var(--3d-shadow), var(--3d-inset);
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease-out;
         }
 
         .sidebar-header {
@@ -414,11 +458,12 @@
             align-items: center;
             padding-bottom: 0.75rem;
             border-bottom: 1px solid var(--border-subtle);
+            transform: translateZ(15px);
         }
 
         .sidebar-title {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 800;
             color: var(--text-heading);
             display: flex;
             align-items: center;
@@ -430,6 +475,7 @@
             border: none;
             color: var(--text-muted);
             font-size: 0.8rem;
+            font-weight: 600;
             cursor: pointer;
             transition: color 0.2s;
         }
@@ -441,30 +487,33 @@
         .history-list {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.85rem;
             overflow-y: auto;
-            max-height: 460px;
+            max-height: 480px;
+            transform: translateZ(20px);
         }
 
         .history-item {
             background: var(--surface-inner);
             border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 0.85rem;
+            border-radius: 14px;
+            padding: 0.95rem;
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
-            transition: all 0.2s ease;
+            gap: 0.4rem;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.05);
+            transition: all 0.25s ease;
             cursor: pointer;
         }
 
         .history-item:hover {
             border-color: var(--primary-cyan);
-            transform: translateX(3px);
+            transform: translateZ(10px) translateX(4px);
+            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.2);
         }
 
         .hist-spoken {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: var(--text-body);
             white-space: nowrap;
             overflow: hidden;
@@ -472,8 +521,8 @@
         }
 
         .hist-translated {
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 0.95rem;
+            font-weight: 700;
             color: var(--primary-cyan);
             white-space: nowrap;
             overflow: hidden;
@@ -481,13 +530,13 @@
         }
 
         .hist-meta {
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: var(--text-muted);
             display: flex;
             justify-content: space-between;
         }
 
-        /* Toast Container */
+        /* Toast Notifications */
         .toast-box {
             position: fixed;
             bottom: 2rem;
@@ -501,143 +550,147 @@
         .toast {
             background: var(--surface-card);
             color: var(--text-heading);
-            border: 1px solid var(--border-subtle);
-            padding: 0.75rem 1.2rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-glow);
+            padding: 0.85rem 1.35rem;
+            border-radius: 14px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            box-shadow: var(--3d-shadow);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            animation: slideUp 0.3s ease;
+            gap: 0.6rem;
+            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         @keyframes slideUp {
-            from { transform: translateY(15px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from { transform: translateY(20px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Navbar -->
-    <header class="navbar">
-        <div class="brand">
-            <div class="brand-logo"><i class="fa-solid fa-bolt"></i></div>
-            <span class="brand-title">VoiceFlow AI</span>
-        </div>
-        <div class="engine-badge">
-            <div class="pulse-dot"></div>
-            <span>Neural Speech Engine Active</span>
-        </div>
-    </header>
-
-    <!-- Main Workspace -->
-    <main class="workspace">
+    <div class="perspective-container">
         
-        <!-- Translation Studio Panel -->
-        <section class="studio-card">
+        <!-- Header Navbar -->
+        <header class="navbar" id="navCard">
+            <div class="brand">
+                <div class="brand-logo"><i class="fa-solid fa-cube"></i></div>
+                <span class="brand-title">VoiceFlow 3D</span>
+            </div>
+            <div class="engine-badge">
+                <div class="pulse-dot"></div>
+                <span>3D Neural Engine Active</span>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
             
-            <!-- Language Controls Bar -->
-            <div class="controls-bar">
-                <div class="select-group">
-                    <select id="spokenLang">
-                        <option value="ur-PK" selected>Urdu (اردو)</option>
-                        <option value="en-US">English (US)</option>
-                        <option value="es-ES">Spanish (Español)</option>
-                        <option value="fr-FR">French (Français)</option>
-                        <option value="de-DE">German (Deutsch)</option>
-                        <option value="ar-SA">Arabic (العربية)</option>
-                    </select>
+            <!-- Translation Studio Panel -->
+            <section class="studio-card" id="studioCard">
+                
+                <!-- Language Controls Bar -->
+                <div class="controls-bar">
+                    <div class="select-group">
+                        <select id="spokenLang">
+                            <option value="ur-PK" selected>Urdu (اردو)</option>
+                            <option value="en-US">English (US)</option>
+                            <option value="es-ES">Spanish (Español)</option>
+                            <option value="fr-FR">French (Français)</option>
+                            <option value="de-DE">German (Deutsch)</option>
+                            <option value="ar-SA">Arabic (العربية)</option>
+                        </select>
+                    </div>
+
+                    <button class="swap-btn" onclick="swapLanguages()" title="Swap Languages">
+                        <i class="fa-solid fa-right-left"></i>
+                    </button>
+
+                    <div class="select-group">
+                        <select id="targetLang">
+                            <option value="en" selected>English</option>
+                            <option value="ur">Urdu (اردو)</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="ar">Arabic</option>
+                        </select>
+                    </div>
                 </div>
 
-                <button class="swap-btn" onclick="swapLanguages()" title="Swap Languages">
-                    <i class="fa-solid fa-right-left"></i>
-                </button>
+                <!-- Visualizer Deck & Button -->
+                <div class="visualizer-deck" id="visualizerDeck">
+                    <canvas id="waveCanvas"></canvas>
+                    
+                    <button class="mic-button" id="micBtn" onclick="toggleLiveSpeech()">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
 
-                <div class="select-group">
-                    <select id="targetLang">
-                        <option value="en" selected>English</option>
-                        <option value="ur">Urdu (اردو)</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="de">German</option>
-                        <option value="ar">Arabic</option>
-                    </select>
+                    <div class="deck-hint" id="deckHint">Click microphone to START speaking</div>
+                    <div class="kb-pill">Press <kbd>Spacebar</kbd> to record</div>
                 </div>
-            </div>
 
-            <!-- Visualizer Deck & Button -->
-            <div class="visualizer-deck" id="visualizerDeck">
-                <canvas id="waveCanvas"></canvas>
-                
-                <button class="mic-button" id="micBtn" onclick="toggleLiveSpeech()">
-                    <i class="fa-solid fa-microphone"></i>
-                </button>
-
-                <div class="deck-hint" id="deckHint">Click microphone to START speaking</div>
-                <div class="kb-pill">Press <kbd>Spacebar</kbd> to record</div>
-            </div>
-
-            <!-- Speech & Translation Cards Grid -->
-            <div class="cards-grid">
-                
-                <!-- Spoken Input Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title"><i class="fa-solid fa-comment-dots" style="color: var(--primary-cyan)"></i> Live Input</span>
-                        <div class="card-actions">
-                            <button class="btn-icon" onclick="copyText('spokenText')" title="Copy Text">
-                                <i class="fa-regular fa-copy"></i>
-                            </button>
-                            <button class="btn-icon" onclick="clearCards()" title="Clear Card">
-                                <i class="fa-solid fa-rotate-left"></i>
-                            </button>
+                <!-- Speech & Translation Cards Grid -->
+                <div class="cards-grid">
+                    
+                    <!-- Spoken Input Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title"><i class="fa-solid fa-comment-dots" style="color: var(--primary-cyan)"></i> Live Input</span>
+                            <div class="card-actions">
+                                <button class="btn-icon" onclick="copyText('spokenText')" title="Copy Text">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                                <button class="btn-icon" onclick="clearCards()" title="Clear Card">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-content" id="spokenText">
+                            <span class="placeholder-text">Speak into your mic — words stream live in real-time...</span>
                         </div>
                     </div>
-                    <div class="card-content" id="spokenText">
-                        <span class="placeholder-text">Speak into your mic — words stream live in real-time...</span>
-                    </div>
-                </div>
 
-                <!-- Translation Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title"><i class="fa-solid fa-sparkles" style="color: var(--primary-blue)"></i> AI Translation</span>
-                        <div class="card-actions">
-                            <button class="btn-icon" onclick="copyText('translatedText')" title="Copy Translation">
-                                <i class="fa-regular fa-copy"></i>
-                            </button>
-                            <button class="btn-icon" onclick="replayAudio()" title="Listen Again">
-                                <i class="fa-solid fa-volume-high"></i>
-                            </button>
+                    <!-- Translation Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title"><i class="fa-solid fa-sparkles" style="color: var(--primary-blue)"></i> AI Translation</span>
+                            <div class="card-actions">
+                                <button class="btn-icon" onclick="copyText('translatedText')" title="Copy Translation">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                                <button class="btn-icon" onclick="replayAudio()" title="Listen Again">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-content" id="translatedText">
+                            <span class="placeholder-text">Translation will appear here...</span>
                         </div>
                     </div>
-                    <div class="card-content" id="translatedText">
-                        <span class="placeholder-text">Translation will appear here...</span>
+
+                </div>
+
+            </section>
+
+            <!-- Sidebar Activity Drawer -->
+            <aside class="sidebar" id="sidebarCard">
+                <div class="sidebar-header">
+                    <div class="sidebar-title"><i class="fa-solid fa-clock-rotate-left"></i> Activity History</div>
+                    <button class="btn-clear" onclick="clearHistory()">Clear All</button>
+                </div>
+
+                <div class="history-list" id="historyList">
+                    <div class="history-item" style="cursor: default; opacity: 0.5;">
+                        <div class="hist-spoken">Your recent translations will appear here...</div>
                     </div>
                 </div>
+            </aside>
 
-            </div>
+        </main>
 
-        </section>
-
-        <!-- Sidebar Activity Drawer -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="sidebar-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</div>
-                <button class="btn-clear" onclick="clearHistory()">Clear All</button>
-            </div>
-
-            <div class="history-list" id="historyList">
-                <div class="history-item" style="cursor: default; opacity: 0.5;">
-                    <div class="hist-spoken">Your recent translations will appear here...</div>
-                </div>
-            </div>
-        </aside>
-
-    </main>
+    </div>
 
     <!-- Toast Notifications -->
     <div class="toast-box" id="toastBox"></div>
@@ -649,20 +702,45 @@
         let lastTranslationText = '';
         let lastTargetLang = 'en';
 
-        // Electric Blue & Cyan Soundwave Animation
+        // Interactive 3D Mouse Parallax Tilt Effect
+        const studioCard = document.getElementById('studioCard');
+        const sidebarCard = document.getElementById('sidebarCard');
+
+        function apply3DTilt(element, e) {
+            const rect = element.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            const rotateX = (-y / rect.height) * 12; // Max 12 deg tilt
+            const rotateY = (x / rect.width) * 12;
+
+            element.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        }
+
+        function reset3DTilt(element) {
+            element.style.transform = `rotateX(0deg) rotateY(0deg) translateZ(0px)`;
+        }
+
+        studioCard.addEventListener('mousemove', (e) => apply3DTilt(studioCard, e));
+        studioCard.addEventListener('mouseleave', () => reset3DTilt(studioCard));
+
+        sidebarCard.addEventListener('mousemove', (e) => apply3DTilt(sidebarCard, e));
+        sidebarCard.addEventListener('mouseleave', () => reset3DTilt(sidebarCard));
+
+        // 3D Canvas Animated Soundwave
         const canvas = document.getElementById('waveCanvas');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = 50;
+            canvas.height = 60;
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
         function renderWave(time) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 3;
             
             const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
             gradient.addColorStop(0, '#2563eb');
@@ -671,12 +749,12 @@
             ctx.strokeStyle = gradient;
 
             ctx.beginPath();
-            const step = canvas.width / 80;
+            const step = canvas.width / 90;
             let x = 0;
 
-            for (let i = 0; i < 80; i++) {
-                const amp = isListening ? Math.sin(time * 0.006 + i * 0.12) * 16 + 20 : 4;
-                const y = (canvas.height / 2) + Math.sin(time * 0.003 + i * 0.25) * amp;
+            for (let i = 0; i < 90; i++) {
+                const amp = isListening ? Math.sin(time * 0.007 + i * 0.14) * 20 + 24 : 5;
+                const y = (canvas.height / 2) + Math.sin(time * 0.003 + i * 0.28) * amp;
 
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
@@ -749,7 +827,7 @@
 
         async function executeTranslation(text, targetLang) {
             const hintText = document.getElementById('deckHint');
-            hintText.innerText = '⚡ AI Translating & Synthesizing Speech...';
+            hintText.innerText = '⚡ 3D Neural Translation Active...';
 
             try {
                 const response = await fetch('/api/translate', {
