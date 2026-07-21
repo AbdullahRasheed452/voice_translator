@@ -1,6 +1,7 @@
 sounddevice
 numpy
 scipy
-openai-whisper
+faster-whisper
 deep-translator
-pyttsx3
+gTTS
+playsound==1.2.2
