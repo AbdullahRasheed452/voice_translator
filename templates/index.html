@@ -4,699 +4,891 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VoiceFlow AI</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Google Fonts: Inter & Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --bg-dark: #050811;
-            --surface-card: #0c1322;
-            --surface-inner: #070d19;
-            --border-subtle: rgba(255, 255, 255, 0.1);
-            --border-glow: rgba(59, 130, 246, 0.5);
-            
-            /* Executive 3D Electric Blue Palette */
-            --primary-blue: #3b82f6;
-            --primary-cyan: #06b6d4;
-            --blue-gradient: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
-            --3d-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(37, 99, 235, 0.15);
-            --3d-inset: inset 0 1px 1px rgba(255, 255, 255, 0.15), inset 0 -2px 5px rgba(0, 0, 0, 0.6);
-            --accent-emerald: #10b981;
-            --danger-red: #ef4444;
-            
-            --text-heading: #ffffff;
-            --text-body: #cbd5e1;
+            /* Restrained SaaS Dark Palette */
+            --bg-root: #090d16;
+            --surface-card: #111726;
+            --surface-card-hover: #161e31;
+            --surface-inner: #0b101d;
+            --border-subtle: #1e293b;
+            --border-focus: #3b82f6;
+
+            /* Precision Accent & Status Colors */
+            --brand-primary: #3b82f6;
+            --brand-primary-hover: #2563eb;
+            --accent-cyan: #06b6d4;
+            --status-green: #10b981;
+            --status-red: #ef4444;
+            --status-amber: #f59e0b;
+
+            /* Crisp Typography */
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
             --text-muted: #64748b;
-            
-            --radius-main: 24px;
-            --radius-inner: 16px;
+
+            /* Spacing & Radii System */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
+            --transition-fast: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, .brand-title {
-            font-family: 'Outfit', sans-serif;
-        }
-
         body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(5, 8, 17, 0.9) 0px, transparent 100%);
-            color: var(--text-body);
+            background-color: var(--bg-root);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 1.5rem 1rem;
-            perspective: 1200px;
             overflow-x: hidden;
         }
 
-        /* 3D Perspective Card Wrapper */
-        .perspective-container {
-            perspective: 1000px;
-            width: 100%;
-            max-width: 1100px;
-        }
-
-        /* Top 3D Header Navbar */
+        /* Top SaaS Header Navbar */
         .navbar {
-            width: 100%;
+            height: 64px;
+            padding: 0 24px;
+            background: var(--surface-card);
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 1rem 1.75rem;
-            background: rgba(12, 19, 34, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-main);
-            margin-bottom: 1.75rem;
-            box-shadow: var(--3d-shadow), var(--3d-inset);
-            transform-style: preserve-3d;
-            transition: transform 0.3s ease;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 40;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 0.85rem;
-            transform: translateZ(20px);
+            gap: 12px;
         }
 
         .brand-logo {
-            width: 42px;
-            height: 42px;
-            background: var(--blue-gradient);
-            border-radius: 12px;
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, var(--brand-primary), var(--accent-cyan));
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4), inset 0 2px 3px rgba(255,255,255,0.4);
-            transform: translateZ(10px);
+            color: #fff;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
         }
 
-        .brand-title {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: var(--text-heading);
-            letter-spacing: -0.02em;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .engine-badge {
-            background: rgba(16, 185, 129, 0.12);
-            color: var(--accent-emerald);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.82rem;
+        .brand-name {
             font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        /* Language Controls Bar in Header */
+        .header-lang-bar {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
-            transform: translateZ(15px);
-        }
-
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent-emerald);
-            border-radius: 50%;
-            box-shadow: 0 0 12px var(--accent-emerald);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.3); }
-        }
-
-        /* Workspace Grid Layout */
-        .workspace {
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 330px;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 900px) {
-            .workspace { grid-template-columns: 1fr; }
-        }
-
-        /* 3D Interactive Studio Card */
-        .studio-card {
-            background: rgba(12, 19, 34, 0.85);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-main);
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.75rem;
-            box-shadow: var(--3d-shadow), var(--3d-inset);
-            transform-style: preserve-3d;
-            transition: transform 0.15s ease-out;
-        }
-
-        /* Language Controls Bar */
-        .controls-bar {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
+            gap: 8px;
             background: var(--surface-inner);
+            padding: 4px 8px;
+            border-radius: var(--radius-md);
             border: 1px solid var(--border-subtle);
-            padding: 0.6rem;
-            border-radius: var(--radius-inner);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
-            transform: translateZ(25px);
         }
 
-        .select-group {
-            flex: 1;
+        .lang-select-group {
             position: relative;
         }
 
-        .select-group select {
-            width: 100%;
+        .lang-select-group select {
+            appearance: none;
             background: transparent;
             border: none;
-            color: var(--text-heading);
-            font-size: 0.95rem;
-            font-weight: 700;
-            padding: 0.7rem 1rem;
-            outline: none;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 6px 28px 6px 10px;
             cursor: pointer;
-            appearance: none;
+            outline: none;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
         }
 
-        .select-group select option {
-            background-color: #0c1322;
-            color: #ffffff;
-            padding: 0.6rem 1rem;
+        .lang-select-group select:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .select-group::after {
+        .lang-select-group select option {
+            background: var(--surface-card);
+            color: var(--text-primary);
+        }
+
+        .lang-select-group::after {
             content: '\f107';
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             position: absolute;
-            right: 1rem;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             pointer-events: none;
+            font-size: 0.75rem;
         }
 
-        /* 3D Rotating Swap Button */
         .swap-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: linear-gradient(145deg, #141f36, #090e1a);
-            border: 1px solid var(--border-subtle);
-            color: var(--primary-cyan);
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.15);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform: translateZ(15px);
+            transition: var(--transition-fast);
         }
 
         .swap-btn:hover {
-            background: var(--blue-gradient);
-            color: white;
-            border-color: var(--primary-blue);
-            transform: translateZ(25px) rotate(180deg) scale(1.1);
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--brand-primary);
         }
 
-        /* 3D Visualizer & Record Deck */
-        .visualizer-deck {
-            background: radial-gradient(circle at center, rgba(6, 182, 212, 0.08) 0%, transparent 70%), var(--surface-inner);
+        /* Header Right Actions */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--status-green);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background-color: var(--status-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--status-green);
+        }
+
+        .btn-secondary {
+            background: var(--surface-inner);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
-            padding: 2.25rem 1.5rem;
+            color: var(--text-secondary);
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-fast);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-card-hover);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Main Workspace Container */
+        .app-container {
+            flex: 1;
+            max-width: 1320px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hero Recording Control Panel */
+        .hero-deck {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            box-shadow: var(--shadow-subtle);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.25rem;
+            justify-content: center;
+            gap: 20px;
             position: relative;
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.7), 0 10px 25px rgba(0,0,0,0.4);
-            transform: translateZ(30px);
-            transform-style: preserve-3d;
-            transition: all 0.3s ease;
         }
 
-        .visualizer-deck.active {
-            border-color: var(--border-glow);
-            box-shadow: inset 0 3px 8px rgba(0,0,0,0.7), 0 0 35px rgba(6, 182, 212, 0.3);
-        }
-
-        /* Canvas Sound Wave */
-        #waveCanvas {
+        .deck-top-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
-            height: 60px;
-            opacity: 0.4;
-            transition: opacity 0.3s ease;
         }
 
-        .visualizer-deck.active #waveCanvas {
-            opacity: 1;
+        .state-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
         }
 
-        /* 3D Giant Metallic Mic Button */
-        .mic-button {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #3b82f6 0%, #1d4ed8 70%, #1e40af 100%);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 2.2rem;
-            cursor: pointer;
-            box-shadow: 
-                0 15px 35px rgba(37, 99, 235, 0.5),
-                0 5px 15px rgba(0, 0, 0, 0.8),
-                inset 0 3px 5px rgba(255, 255, 255, 0.4),
-                inset 0 -5px 10px rgba(0, 0, 0, 0.6);
+        .timer-display {
+            font-family: monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--surface-inner);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .timer-display.active {
+            color: var(--status-red);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Waveform Canvas */
+        .canvas-container {
+            width: 100%;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform: translateZ(40px);
+        }
+
+        #waveCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Primary Mic Action Button */
+        .mic-btn-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mic-button {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            border: none;
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+            outline: none;
+            z-index: 2;
         }
 
         .mic-button:hover {
-            transform: translateZ(50px) scale(1.08);
-            box-shadow: 
-                0 20px 45px rgba(6, 182, 212, 0.6),
-                0 5px 15px rgba(0, 0, 0, 0.8),
-                inset 0 3px 6px rgba(255, 255, 255, 0.6);
+            background: var(--brand-primary-hover);
+            transform: scale(1.04);
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.45);
         }
 
         .mic-button.recording {
-            background: radial-gradient(circle at 30% 30%, #f43f5e 0%, #dc2626 70%, #991b1b 100%);
-            box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
-            animation: ring-pulse 1.5s infinite;
+            background: var(--status-red);
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6);
+            animation: pulseAura 1.8s infinite;
         }
 
-        @keyframes ring-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
-            70% { box-shadow: 0 0 0 26px rgba(244, 63, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+        @keyframes pulseAura {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            70% { box-shadow: 0 0 0 18px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
         .deck-hint {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-body);
-            transform: translateZ(20px);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
         .kb-pill {
             font-size: 0.75rem;
             color: var(--text-muted);
-            background: var(--surface-card);
-            padding: 0.25rem 0.65rem;
-            border-radius: 8px;
+            background: var(--surface-inner);
+            padding: 3px 8px;
+            border-radius: 4px;
             border: 1px solid var(--border-subtle);
-            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
-            transform: translateZ(15px);
         }
 
-        /* 3D Output Cards Grid */
-        .cards-grid {
+        kbd {
+            font-family: inherit;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Results Cards Grid */
+        .results-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
-            transform: translateZ(30px);
+            gap: 20px;
         }
 
-        @media (max-width: 640px) {
-            .cards-grid { grid-template-columns: 1fr; }
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .card {
-            background: var(--surface-inner);
+        .result-card {
+            background: var(--surface-card);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-inner);
-            padding: 1.35rem;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-subtle);
             display: flex;
             flex-direction: column;
-            min-height: 190px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
+            gap: 16px;
+            min-height: 260px;
+            transition: var(--transition-fast);
         }
 
-        .card:hover {
-            border-color: var(--border-glow);
-            transform: translateZ(10px);
+        .result-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
         }
 
         .card-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.85rem;
-            transform: translateZ(10px);
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        .card-title {
-            font-size: 0.78rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
+        .card-tag {
             display: flex;
             align-items: center;
-            gap: 0.45rem;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .card-tag i {
+            font-size: 0.9rem;
         }
 
         .card-actions {
             display: flex;
-            gap: 0.4rem;
+            align-items: center;
+            gap: 6px;
         }
 
-        .btn-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: linear-gradient(145deg, #141f36, #090e1a);
+        .action-btn {
+            background: var(--surface-inner);
             border: 1px solid var(--border-subtle);
-            color: var(--text-muted);
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
-            transition: all 0.25s ease;
+            font-size: 0.8rem;
+            transition: var(--transition-fast);
         }
 
-        .btn-icon:hover {
-            background: var(--primary-blue);
-            color: white;
-            border-color: var(--primary-blue);
-            transform: translateZ(10px) scale(1.1);
+        .action-btn:hover {
+            background: var(--surface-card-hover);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
-        .card-content {
-            font-size: 1.15rem;
-            line-height: 1.6;
-            color: var(--text-heading);
+        .card-body {
             flex: 1;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-primary);
             word-break: break-word;
-            transform: translateZ(15px);
-        }
-
-        .interim-text {
-            color: var(--primary-cyan);
-            font-style: italic;
+            white-space: pre-wrap;
+            position: relative;
         }
 
         .placeholder-text {
             color: var(--text-muted);
+            font-size: 0.95rem;
             font-style: italic;
-            font-weight: 400;
         }
 
-        /* Sidebar Activity Drawer */
-        .sidebar {
-            background: rgba(12, 19, 34, 0.85);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-main);
-            padding: 1.75rem;
+        .interim-text {
+            color: var(--accent-cyan);
+            font-style: italic;
+        }
+
+        /* Skeleton Loading Bars */
+        .skeleton-box {
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
-            box-shadow: var(--3d-shadow), var(--3d-inset);
-            transform-style: preserve-3d;
-            transition: transform 0.15s ease-out;
+            gap: 12px;
+            width: 100%;
+            animation: pulseSkeleton 1.4s infinite ease-in-out;
+        }
+
+        .skeleton-line {
+            height: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+        }
+
+        .skeleton-line.w-80 { width: 80%; }
+        .skeleton-line.w-60 { width: 60%; }
+        .skeleton-line.w-90 { width: 90%; }
+
+        @keyframes pulseSkeleton {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.4; }
+        }
+
+        /* Sidebar Drawer (Activity History) */
+        .sidebar-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 620px;
         }
 
         .sidebar-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding-bottom: 0.75rem;
+            justify-content: space-between;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--border-subtle);
-            transform: translateZ(15px);
         }
 
         .sidebar-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--text-heading);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-clear {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .btn-clear:hover {
-            color: var(--danger-red);
+            gap: 8px;
         }
 
         .history-list {
+            flex: 1;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
-            overflow-y: auto;
-            max-height: 480px;
-            transform: translateZ(20px);
+            gap: 12px;
+            padding-right: 4px;
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .history-list::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 4px;
         }
 
         .history-item {
             background: var(--surface-inner);
             border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 0.95rem;
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: var(--transition-fast);
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.05);
-            transition: all 0.25s ease;
-            cursor: pointer;
+            gap: 6px;
         }
 
         .history-item:hover {
-            border-color: var(--primary-cyan);
-            transform: translateZ(10px) translateX(4px);
-            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.2);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: var(--surface-card-hover);
         }
 
         .hist-spoken {
-            font-size: 0.88rem;
-            color: var(--text-body);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-weight: 500;
         }
 
         .hist-translated {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--primary-cyan);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.85rem;
+            color: var(--brand-primary);
         }
 
         .hist-meta {
-            font-size: 0.72rem;
-            color: var(--text-muted);
             display: flex;
+            align-items: center;
             justify-content: space-between;
+            font-size: 0.725rem;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
-        /* Toast Notifications */
-        .toast-box {
+        /* Slide-Over Settings Drawer Modal */
+        .modal-overlay {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 999;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 8, 17, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex;
+            justify-content: flex-end;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 200ms ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .settings-drawer {
+            width: 400px;
+            max-width: 90vw;
+            height: 100%;
+            background: var(--surface-card);
+            border-left: 1px solid var(--border-subtle);
+            padding: 24px;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 24px;
+            transform: translateX(100%);
+            transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.open .settings-drawer {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .drawer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .setting-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .setting-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .setting-select, .setting-input {
+            width: 100%;
+            background: var(--surface-inner);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition-fast);
+        }
+
+        .setting-select:focus, .setting-input:focus {
+            border-color: var(--brand-primary);
+        }
+
+        /* Toast Notifications Queue */
+        .toast-box {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 120;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .toast {
             background: var(--surface-card);
-            color: var(--text-heading);
-            border: 1px solid var(--border-glow);
-            padding: 0.85rem 1.35rem;
-            border-radius: 14px;
-            font-size: 0.88rem;
-            font-weight: 700;
-            box-shadow: var(--3d-shadow);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            padding: 12px 18px;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-subtle);
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            gap: 10px;
+            animation: toastIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(20px) scale(0.9); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="perspective-container">
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <div class="brand">
+            <div class="brand-logo"><i class="fa-solid fa-waveform"></i></div>
+            <span class="brand-name">VoiceFlow AI</span>
+        </div>
+
+        <!-- Center Language Control Bar -->
+        <div class="header-lang-bar">
+            <div class="lang-select-group">
+                <select id="spokenLang">
+                    <option value="ur-PK" selected>Urdu (اردو)</option>
+                    <option value="en-US">English (US)</option>
+                    <option value="es-ES">Spanish (Español)</option>
+                    <option value="fr-FR">French (Français)</option>
+                    <option value="de-DE">German (Deutsch)</option>
+                    <option value="ar-SA">Arabic (العربية)</option>
+                </select>
+            </div>
+
+            <button class="swap-btn" onclick="swapLanguages()" title="Swap Languages">
+                <i class="fa-solid fa-right-left"></i>
+            </button>
+
+            <div class="lang-select-group">
+                <select id="targetLang">
+                    <option value="en" selected>English</option>
+                    <option value="ur">Urdu (اردو)</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                    <option value="de">German</option>
+                    <option value="ar">Arabic</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span>Engine Active</span>
+            </div>
+            <button class="btn-secondary" onclick="openSettings()" title="Settings">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Settings</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <div class="app-container">
         
-        <!-- Header Navbar -->
-        <header class="navbar" id="navCard">
-            <div class="brand">
-                <div class="brand-logo"><i class="fa-solid fa-wave-square"></i></div>
-                <span class="brand-title">VoiceFlow AI</span>
-            </div>
-            <div class="engine-badge">
-                <div class="pulse-dot"></div>
-                <span>Neural Speech Engine Active</span>
-            </div>
-        </header>
-
-        <!-- Main Workspace -->
-        <main class="workspace">
+        <!-- Left Main Panel -->
+        <main class="main-panel">
             
-            <!-- Translation Studio Panel -->
-            <section class="studio-card" id="studioCard">
-                
-                <!-- Language Controls Bar -->
-                <div class="controls-bar">
-                    <div class="select-group">
-                        <select id="spokenLang">
-                            <option value="ur-PK" selected>Urdu (اردو)</option>
-                            <option value="en-US">English (US)</option>
-                            <option value="es-ES">Spanish (Español)</option>
-                            <option value="fr-FR">French (Français)</option>
-                            <option value="de-DE">German (Deutsch)</option>
-                            <option value="ar-SA">Arabic (العربية)</option>
-                        </select>
+            <!-- Recording Hero Deck -->
+            <section class="hero-deck">
+                <div class="deck-top-info">
+                    <div class="state-indicator" id="stateIndicator">
+                        <i class="fa-solid fa-microphone-slash" style="color: var(--text-muted);"></i>
+                        <span id="stateText">Microphone Idle</span>
                     </div>
-
-                    <button class="swap-btn" onclick="swapLanguages()" title="Swap Languages">
-                        <i class="fa-solid fa-right-left"></i>
-                    </button>
-
-                    <div class="select-group">
-                        <select id="targetLang">
-                            <option value="en" selected>English</option>
-                            <option value="ur">Urdu (اردو)</option>
-                            <option value="es">Spanish</option>
-                            <option value="fr">French</option>
-                            <option value="de">German</option>
-                            <option value="ar">Arabic</option>
-                        </select>
-                    </div>
+                    <div class="timer-display" id="timerDisplay">00:00</div>
                 </div>
 
-                <!-- Visualizer Deck & Button -->
-                <div class="visualizer-deck" id="visualizerDeck">
+                <!-- Live Waveform Animation Canvas -->
+                <div class="canvas-container">
                     <canvas id="waveCanvas"></canvas>
-                    
-                    <button class="mic-button" id="micBtn" onclick="toggleLiveSpeech()">
+                </div>
+
+                <!-- Mic Toggle Button -->
+                <div class="mic-btn-wrap">
+                    <button class="mic-button" id="micBtn" onclick="toggleLiveSpeech()" title="Click to Record">
                         <i class="fa-solid fa-microphone"></i>
                     </button>
-
-                    <div class="deck-hint" id="deckHint">Click microphone to record</div>
-                    <div class="kb-pill">Press <kbd>Spacebar</kbd> to record</div>
                 </div>
 
-                <!-- Speech & Translation Cards Grid -->
-                <div class="cards-grid">
-                    
-                    <!-- Spoken Input Card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title"><i class="fa-solid fa-comment-dots" style="color: var(--primary-cyan)"></i> Live Input</span>
-                            <div class="card-actions">
-                                <button class="btn-icon" onclick="copyText('spokenText')" title="Copy Text">
-                                    <i class="fa-regular fa-copy"></i>
-                                </button>
-                                <button class="btn-icon" onclick="clearCards()" title="Clear Card">
-                                    <i class="fa-solid fa-rotate-left"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-content" id="spokenText">
-                            <span class="placeholder-text">Your spoken words will appear here...</span>
+                <div class="deck-hint" id="deckHint">Click microphone to record</div>
+                <div class="kb-pill">Press <kbd>Spacebar</kbd> to record</div>
+            </section>
+
+            <!-- Results Cards Grid -->
+            <section class="results-grid">
+                
+                <!-- Spoken Input Card -->
+                <div class="result-card">
+                    <div class="card-header">
+                        <span class="card-tag"><i class="fa-solid fa-comment-dots" style="color: var(--accent-cyan);"></i> Original Speech</span>
+                        <div class="card-actions">
+                            <button class="action-btn" onclick="copyText('spokenText')" title="Copy Text">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <button class="action-btn" onclick="clearCards()" title="Clear Text">
+                                <i class="fa-solid fa-rotate-left"></i>
+                            </button>
                         </div>
                     </div>
+                    <div class="card-body" id="spokenText">
+                        <span class="placeholder-text">Your spoken words will appear here...</span>
+                    </div>
+                </div>
 
-                    <!-- Translation Card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="card-title"><i class="fa-solid fa-sparkles" style="color: var(--primary-blue)"></i> AI Translation</span>
-                            <div class="card-actions">
-                                <button class="btn-icon" onclick="copyText('translatedText')" title="Copy Translation">
-                                    <i class="fa-regular fa-copy"></i>
-                                </button>
-                                <button class="btn-icon" onclick="replayAudio()" title="Listen Again">
-                                    <i class="fa-solid fa-volume-high"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-content" id="translatedText">
-                            <span class="placeholder-text">Translation will appear here...</span>
+                <!-- AI Translation Card -->
+                <div class="result-card">
+                    <div class="card-header">
+                        <span class="card-tag"><i class="fa-solid fa-sparkles" style="color: var(--brand-primary);"></i> AI Translation</span>
+                        <div class="card-actions">
+                            <button class="action-btn" onclick="copyText('translatedText')" title="Copy Translation">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <button class="action-btn" onclick="replayAudio()" title="Listen Again">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </button>
+                            <button class="action-btn" onclick="downloadTranslation()" title="Download Text">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
                         </div>
                     </div>
-
+                    <div class="card-body" id="translatedText">
+                        <span class="placeholder-text">Translation will appear here...</span>
+                    </div>
                 </div>
 
             </section>
 
-            <!-- Sidebar Activity Drawer -->
-            <aside class="sidebar" id="sidebarCard">
-                <div class="sidebar-header">
-                    <div class="sidebar-title"><i class="fa-solid fa-clock-rotate-left"></i> Activity History</div>
-                    <button class="btn-clear" onclick="clearHistory()">Clear All</button>
-                </div>
-
-                <div class="history-list" id="historyList">
-                    <div class="history-item" style="cursor: default; opacity: 0.5;">
-                        <div class="hist-spoken">Your recent translations will appear here...</div>
-                    </div>
-                </div>
-            </aside>
-
         </main>
+
+        <!-- Right Activity Drawer -->
+        <aside class="sidebar-card">
+            <div class="sidebar-header">
+                <span class="sidebar-title"><i class="fa-solid fa-clock-rotate-left"></i> Activity History</span>
+                <button class="action-btn" onclick="clearHistory()" title="Clear History" style="width: auto; padding: 0 10px; font-size: 0.75rem;">
+                    Clear
+                </button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="history-item" style="cursor: default; opacity: 0.5;">
+                    <div class="hist-spoken">Your recent translations will appear here...</div>
+                </div>
+            </div>
+        </aside>
 
     </div>
 
-    <!-- Toast Notifications -->
+    <!-- Slide-Over Settings Drawer Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="settings-drawer">
+            <div class="drawer-header">
+                <span class="drawer-title"><i class="fa-solid fa-sliders"></i> Audio & Model Settings</span>
+                <button class="close-btn" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="setting-field">
+                <label class="setting-label" for="audioDeviceSelect">Microphone Input Device</label>
+                <select class="setting-select" id="audioDeviceSelect">
+                    <option value="default">Default System Microphone</option>
+                </select>
+            </div>
+
+            <div class="setting-field">
+                <label class="setting-label">Speech Recognition Engine</label>
+                <input class="setting-input" type="text" value="Web Speech API (Real-Time)" readonly>
+            </div>
+
+            <div class="setting-field">
+                <label class="setting-label">Translation & Voice Model</label>
+                <input class="setting-input" type="text" value="Whisper v3 / Google Neural TTS" readonly>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Queue -->
     <div class="toast-box" id="toastBox"></div>
 
     <script>
-        // Global Fail-Safe Error Boundaries (Prevents Browser Crashes)
+        // Global Fail-Safe Error Boundaries
         window.onerror = function(msg, url, line) {
             console.warn('Handled JS error boundary:', msg);
             return true;
@@ -712,72 +904,65 @@
         let lastTranslationText = '';
         let lastTargetLang = 'en';
 
-        // Interactive 3D Mouse Parallax Tilt Effect
-        const studioCard = document.getElementById('studioCard');
-        const sidebarCard = document.getElementById('sidebarCard');
+        // Recording Timer Counter
+        let timerInterval;
+        let secondsElapsed = 0;
 
-        function apply3DTilt(element, e) {
-            const rect = element.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-
-            const rotateX = (-y / rect.height) * 12; // Max 12 deg tilt
-            const rotateY = (x / rect.width) * 12;
-
-            element.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        function startTimer() {
+            secondsElapsed = 0;
+            document.getElementById('timerDisplay').classList.add('active');
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+                const secs = String(secondsElapsed % 60).padStart(2, '0');
+                document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
+            }, 1000);
         }
 
-        function reset3DTilt(element) {
-            element.style.transform = `rotateX(0deg) rotateY(0deg) translateZ(0px)`;
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timerDisplay').classList.remove('active');
+            document.getElementById('timerDisplay').innerText = '00:00';
         }
 
-        studioCard.addEventListener('mousemove', (e) => apply3DTilt(studioCard, e));
-        studioCard.addEventListener('mouseleave', () => reset3DTilt(studioCard));
-
-        sidebarCard.addEventListener('mousemove', (e) => apply3DTilt(sidebarCard, e));
-        sidebarCard.addEventListener('mouseleave', () => reset3DTilt(sidebarCard));
-
-        // 3D Canvas Animated Soundwave
+        // Animated Soundwave Canvas
         const canvas = document.getElementById('waveCanvas');
         const ctx = canvas.getContext('2d');
 
         function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = 60;
+            canvas.height = 48;
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        function renderWave(time) {
+        let wavePhase = 0;
+        function drawWave() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.lineWidth = 3;
-            
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-            gradient.addColorStop(0, '#2563eb');
-            gradient.addColorStop(0.5, '#3b82f6');
-            gradient.addColorStop(1, '#06b6d4');
-            ctx.strokeStyle = gradient;
-
             ctx.beginPath();
-            const step = canvas.width / 90;
-            let x = 0;
+            ctx.lineWidth = 2;
 
-            for (let i = 0; i < 90; i++) {
-                const amp = isListening ? Math.sin(time * 0.007 + i * 0.14) * 20 + 24 : 5;
-                const y = (canvas.height / 2) + Math.sin(time * 0.003 + i * 0.28) * amp;
-
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-
-                x += step;
+            if (isListening) {
+                ctx.strokeStyle = '#3b82f6';
+                wavePhase += 0.12;
+                const midY = canvas.height / 2;
+                for (let x = 0; x < canvas.width; x++) {
+                    const y = midY + Math.sin(x * 0.03 + wavePhase) * 14 * Math.cos(x * 0.01);
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+            } else {
+                ctx.strokeStyle = '#1e293b';
+                const midY = canvas.height / 2;
+                ctx.moveTo(0, midY);
+                ctx.lineTo(canvas.width, midY);
             }
-
             ctx.stroke();
-            requestAnimationFrame(renderWave);
+            requestAnimationFrame(drawWave);
         }
-        requestAnimationFrame(renderWave);
+        drawWave();
 
-        // Web Speech API Setup
+        // Speech Recognition Setup
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
@@ -810,8 +995,6 @@
                 if (event.error === 'not-allowed') {
                     showToast('⚠️ Browser microphone permission blocked! Please allow mic access.', 'danger');
                     setRecordingState(false);
-                } else if (event.error !== 'no-speech') {
-                    console.warn('Speech event error:', event.error);
                 }
             };
 
@@ -847,7 +1030,6 @@
                 setRecordingState(false);
                 try { recognition.stop(); } catch (e) {}
 
-                // Extract spoken text — use interim text as fallback (Edge + Urdu fix)
                 let textToTranslate = fullTranscribedText.trim();
                 if (!textToTranslate) textToTranslate = lastInterimText.trim();
                 if (!textToTranslate) {
@@ -868,8 +1050,10 @@
         }
 
         async function executeTranslation(text, targetLang) {
-            const hintText = document.getElementById('deckHint');
-            hintText.innerText = '⚡ AI Neural Translation Active...';
+            const stateText = document.getElementById('stateText');
+            stateText.innerText = 'Processing Translation...';
+
+            showSkeletonLoaders();
 
             try {
                 const response = await fetch('/api/translate', {
@@ -887,7 +1071,7 @@
                     lastTargetLang = targetLang;
 
                     addHistoryItem(result.spoken_text, result.translated_text, targetLang);
-                    showToast('✅ Translated successfully!', 'success');
+                    showToast('✅ Translation complete', 'success');
                 } else {
                     document.getElementById('spokenText').innerHTML = '<span class="placeholder-text">Your spoken words will appear here...</span>';
                     document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation will appear here...</span>';
@@ -899,26 +1083,43 @@
                 document.getElementById('translatedText').innerHTML = '<span class="placeholder-text">Translation will appear here...</span>';
                 showToast('❌ Backend connection failed', 'danger');
             } finally {
-                hintText.innerText = 'Click microphone to record';
+                stateText.innerText = 'Microphone Idle';
             }
+        }
+
+        function showSkeletonLoaders() {
+            const skeletonHTML = `
+                <div class="skeleton-box">
+                    <div class="skeleton-line w-80"></div>
+                    <div class="skeleton-line w-60"></div>
+                </div>
+            `;
+            document.getElementById('translatedText').innerHTML = skeletonHTML;
         }
 
         function setRecordingState(active) {
             isListening = active;
             const micBtn = document.getElementById('micBtn');
-            const deck = document.getElementById('visualizerDeck');
-            const hintText = document.getElementById('deckHint');
+            const deckHint = document.getElementById('deckHint');
+            const stateText = document.getElementById('stateText');
+            const stateIcon = document.querySelector('#stateIndicator i');
 
             if (active) {
                 micBtn.classList.add('recording');
-                deck.classList.add('active');
-                micBtn.innerHTML = '<i class="fa-solid fa-stop"></i>';
-                hintText.innerText = '🎙️ Recording live... Click to stop';
+                micBtn.innerHTML = '<i class="fa-solid fa-square"></i>';
+                deckHint.innerText = 'Recording live... Click to stop & translate';
+                stateText.innerText = 'Recording Live';
+                stateIcon.className = 'fa-solid fa-microphone';
+                stateIcon.style.color = 'var(--status-red)';
+                startTimer();
             } else {
                 micBtn.classList.remove('recording');
-                deck.classList.remove('active');
                 micBtn.innerHTML = '<i class="fa-solid fa-microphone"></i>';
-                hintText.innerText = 'Click microphone to record';
+                deckHint.innerText = 'Click microphone to record';
+                stateText.innerText = 'Microphone Idle';
+                stateIcon.className = 'fa-solid fa-microphone-slash';
+                stateIcon.style.color = 'var(--text-muted)';
+                stopTimer();
             }
         }
 
@@ -933,14 +1134,27 @@
             if (targetSelect.value === 'en') targetSelect.value = 'ur';
             else targetSelect.value = 'en';
 
-            showToast('🔄 Languages swapped!', 'info');
+            showToast('🔄 Languages swapped', 'info');
         }
 
         function copyText(elementId) {
             const text = document.getElementById(elementId).innerText;
             if (!text || text.includes('will appear here')) return;
             navigator.clipboard.writeText(text);
-            showToast('📋 Copied to clipboard!', 'success');
+            showToast('📋 Copied to clipboard', 'success');
+        }
+
+        function downloadTranslation() {
+            const text = document.getElementById('translatedText').innerText;
+            if (!text || text.includes('will appear here')) return;
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `voiceflow_translation_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('💾 Downloaded text file', 'success');
         }
 
         function clearCards() {
@@ -996,11 +1210,41 @@
             showToast('🧹 History cleared', 'info');
         }
 
-        // Spacebar Shortcut
+        // Slide-over Settings Drawer Controls
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('open');
+            populateAudioDevices();
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('open');
+        }
+
+        async function populateAudioDevices() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const audioInputs = devices.filter(d => d.kind === 'audioinput');
+                const select = document.getElementById('audioDeviceSelect');
+                select.innerHTML = '';
+                audioInputs.forEach((device, index) => {
+                    const opt = document.createElement('option');
+                    opt.value = device.deviceId;
+                    opt.innerText = device.label || `Microphone ${index + 1}`;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.warn('Enumerate audio devices note:', e);
+            }
+        }
+
+        // Keyboard Accessibility
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space' && e.target.tagName !== 'SELECT' && e.target.tagName !== 'INPUT') {
                 e.preventDefault();
                 toggleLiveSpeech();
+            } else if (e.key === 'Escape') {
+                closeSettings();
             }
         });
 
@@ -1010,7 +1254,7 @@
             toast.className = 'toast';
             toast.innerText = msg;
             box.appendChild(toast);
-            setTimeout(() => toast.remove(), 2500);
+            setTimeout(() => toast.remove(), 2400);
         }
     </script>
 </body>
