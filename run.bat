@@ -1,0 +1,3 @@
+@echo off
+echo Starting VoiceFlow AI...
+.\venv\Scripts\python.exe app.py
